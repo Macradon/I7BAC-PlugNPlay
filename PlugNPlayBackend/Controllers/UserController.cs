@@ -31,18 +31,6 @@ namespace PlugNPlayBackend.Controllers
             return user;
         }
 
-        [HttpPost("register")]
-        public ActionResult<User> Create(User user)
-        {
-            var newUser = new User();
-            newUser.Username = user.Username;
-            newUser.Password = user.Password;
-            newUser.Email = user.Email;
-            _userService.Create(newUser);
-
-            return newUser;
-        }
-
         [HttpPut]
         public IActionResult Update(User userObj)
         {
