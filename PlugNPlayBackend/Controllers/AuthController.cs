@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
+using System.Diagnostics;
 
 namespace PlugNPlayBackend.Controllers
 {
@@ -21,7 +22,7 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<User> Create(User user)
+        public ActionResult<User> PostRegister(User user)
         {
             var newUser = new User();
             newUser.Username = user.Username;
@@ -33,10 +34,16 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<User> Login(string username, string password)
+        public ActionResult<User> PostLogin(string username, string password)
         {
             User loginUser = new User();
 
+            return Ok();
+        }
+
+        [HttpPost("password")]
+        public ActionResult<User> ChangePassword(string username, string password)
+        {
             return Ok();
         }
     }
