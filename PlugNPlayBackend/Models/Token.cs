@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PlugNPlayBackend.Models
 {
-    public class PlugNPlaySecurityToken
+    public class Token
     {
     }
 }

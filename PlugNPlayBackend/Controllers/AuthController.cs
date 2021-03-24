@@ -14,37 +14,39 @@ namespace PlugNPlayBackend.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly AuthService _authService;
 
-        public AuthController(UserService userService)
+        public AuthController(AuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost("register")]
-        public ActionResult<User> PostRegister(User user)
+        public ActionResult PostRegister(User user)
         {
             var newUser = new User();
             newUser.Username = user.Username;
-            newUser.Password = user.Password;
             newUser.Email = user.Email;
-            _userService.Create(newUser);
+            if(_authService.Register(user.Username,user.Password,user.Email))
+            {
+                return Ok();
+            }
 
-            return newUser;
+            return Conflict("Username taken");
         }
 
         [HttpPost("login")]
-        public ActionResult<User> PostLogin(string username, string password)
+        public ActionResult PostLogin(string username, string password)
         {
             User loginUser = new User();
-
+            _authService.Login(username, password);
             return Ok();
         }
 
         [HttpPost("password")]
-        public ActionResult<User> ChangePassword(string username, string password)
+        public ActionResult ChangePassword(string username, string password)
         {
-
+            _authService.PasswordUpdate(username, password);
             return Ok();
         }
     }
