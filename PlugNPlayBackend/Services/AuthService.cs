@@ -29,7 +29,48 @@ namespace PlugNPlayBackend.Services
 
         public User PasswordUpdate(string username, string password)
         {
+            User tempUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+            tempUser.Password = password;
+            _user.ReplaceOne(user => user.Username == username, tempUser);
+            return tempUser;
+        }
 
+        public Token Login(string username, string password)
+        {
+            Token newToken = new Token();
+            //Implement
+            return newToken;
+        }
+
+        public bool Register (string username, string password, string email)
+        {
+            //Implement check username
+            return false;
+        }
+
+        private bool CheckUserExistance(string username)
+        {
+            //Implement check
+            return true;
+        }
+
+        private bool ExistanceCheck(string usernam)
+        {
+            //Same as CheckUserExistance -- need to refactor from ClassDiagram
+            return true;
+        }
+
+        private bool PasswordCheck(string password)
+        {
+            //Implement check
+            return false;
+        }
+
+        private Token GenerateToken(string username)
+        {
+            Token newToken = new Token();
+            //Implement token generation
+            return newToken;
         }
     }
 }
