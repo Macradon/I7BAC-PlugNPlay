@@ -44,6 +44,7 @@ namespace PlugNPlayBackend.Controllers
         [HttpPost("password")]
         public ActionResult<User> ChangePassword(string username, string password)
         {
+
             return Ok();
         }
     }
