@@ -8,6 +8,7 @@ using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Websockets;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
 namespace PlugNPlayBackend.Services
 {
@@ -15,6 +16,7 @@ namespace PlugNPlayBackend.Services
     {
         private readonly IMongoCollection<User> _user;
         private readonly FriendlistService _friendlistService;
+        private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
         public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, FriendlistService friendlistService)
         {
@@ -38,19 +40,31 @@ namespace PlugNPlayBackend.Services
         {
             Token newToken = new Token();
             //Implement
-            return newToken;
+            Debug.WriteLine("Username check");
+            if(CheckUserExistance(username))
+            {
+                Debug.WriteLine("Password check");
+                if (PasswordCheck(username,password))
+                {
+                    Debug.WriteLine("Done check");
+                    return newToken;
+                }
+            }
+            Debug.WriteLine("Failed checks");
+            return null;
         }
 
         public bool Register (string username, string password, string email)
         {
-            //Implement check username
             if(!CheckUserExistance(username))
             {
-                Debug.WriteLine("UserCheckPassed");
-                User registerUser = new User();
-                registerUser.Username = username;
-                registerUser.Password = password;
-                registerUser.Email = email;
+                User registerUser = new User()
+                {
+                    Username = username,
+                    Email = email,
+                    Password = password
+                };
+                registerUser.Password = _passwordHasher.HashPassword(registerUser, registerUser.Password);
                 _user.InsertOne(registerUser);
                 return true;
             }
@@ -60,6 +74,7 @@ namespace PlugNPlayBackend.Services
         private bool CheckUserExistance(string username)
         {
             var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+            Debug.WriteLine(username);
             if (user == null)
                 return false;
             return true;
@@ -71,10 +86,20 @@ namespace PlugNPlayBackend.Services
             return true;
         }
 
-        private bool PasswordCheck(string password)
+        private bool PasswordCheck(string username, string password)
         {
-            //Implement check
-            return false;
+            User checkUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+            switch(_passwordHasher.VerifyHashedPassword(checkUser,checkUser.Password,password))
+            {
+                case PasswordVerificationResult.Failed:
+                    return false;
+                case PasswordVerificationResult.Success:
+                    return true;
+                case PasswordVerificationResult.SuccessRehashNeeded:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private Token GenerateToken(string username)

@@ -22,9 +22,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult PostRegister(User user)
+        public ActionResult PostRegister(User userObj)
         {
-            var response = _authService.Register(user.Username, user.Password, user.Email);
+            var response = _authService.Register(userObj.Username, userObj.Password, userObj.Email);
             Debug.WriteLine("response is " + response);
             if (response)
                 return Ok("User registered");
@@ -33,20 +33,20 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult PostLogin(string username, string password)
+        public ActionResult PostLogin(User userObj)
         {
-            var response = _authService.Login(username, password);
+            var response = _authService.Login(userObj.Username, userObj.Password);
 
             if (response == null)
                 return Conflict("Wrong credentials");
 
-            return Ok(response);
+            return Ok("Logged In: " + response);
         }
 
         [HttpPost("password")]
-        public ActionResult ChangePassword(string username, string password)
+        public ActionResult ChangePassword(User userObj)
         {
-            var response = _authService.PasswordUpdate(username, password);
+            var response = _authService.PasswordUpdate(userObj.Username, userObj.Password);
 
             if (response == null)
                 return Conflict("Something went wrong");
