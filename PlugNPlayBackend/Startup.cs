@@ -19,8 +19,6 @@ namespace PlugNPlayBackend
 {
     public class Startup
     {
-        private string _dbContext = null;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,7 +35,11 @@ namespace PlugNPlayBackend
             services.AddSingleton<IPlugNPlayDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<PlugNPlayDatabaseSettings>>().Value);
 
+            services.AddSignalR();
+
             services.AddSingleton<UserService>();
+            services.AddSingleton<FriendlistService>();
+            services.AddSingleton<AuthService>();
 
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;
         }

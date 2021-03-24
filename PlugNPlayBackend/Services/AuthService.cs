@@ -7,6 +7,7 @@ using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Websockets;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 
 namespace PlugNPlayBackend.Services
 {
@@ -14,12 +15,10 @@ namespace PlugNPlayBackend.Services
     {
         private readonly IMongoCollection<User> _user;
         private readonly FriendlistService _friendlistService;
-        private readonly GlobalHub _globalHub;
 
-        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, FriendlistService friendlistService, GlobalHub globalHub)
+        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, FriendlistService friendlistService)
         {
             _friendlistService = friendlistService;
-            _globalHub = globalHub;
 
             var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
             var database = client.GetDatabase(settings.DatabaseName);
@@ -45,12 +44,24 @@ namespace PlugNPlayBackend.Services
         public bool Register (string username, string password, string email)
         {
             //Implement check username
+            if(!CheckUserExistance(username))
+            {
+                Debug.WriteLine("UserCheckPassed");
+                User registerUser = new User();
+                registerUser.Username = username;
+                registerUser.Password = password;
+                registerUser.Email = email;
+                _user.InsertOne(registerUser);
+                return true;
+            }
             return false;
         }
 
         private bool CheckUserExistance(string username)
         {
-            //Implement check
+            var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+            if (user == null)
+                return false;
             return true;
         }
 
