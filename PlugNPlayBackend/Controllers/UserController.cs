@@ -9,7 +9,7 @@ using PlugNPlayBackend.Models;
 
 namespace PlugNPlayBackend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {

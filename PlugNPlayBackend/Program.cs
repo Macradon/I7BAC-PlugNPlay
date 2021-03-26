@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using Azure.Identity;
 
 namespace PlugNPlayBackend
 {
@@ -19,6 +20,13 @@ namespace PlugNPlayBackend
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+                    config.AddAzureKeyVault(
+                        keyVaultEndpoint,
+                        new DefaultAzureCredential());
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

@@ -29,6 +29,18 @@ namespace PlugNPlayBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://localhost:4200/",
+                                                          "http://localhost:4200")
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod();
+                                  });
+            });
+
             services.Configure<PlugNPlayDatabaseSettings>(
                 Configuration.GetSection(nameof(PlugNPlayDatabaseSettings)));
 
@@ -51,6 +63,8 @@ namespace PlugNPlayBackend
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 

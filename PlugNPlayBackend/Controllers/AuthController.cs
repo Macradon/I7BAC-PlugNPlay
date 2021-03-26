@@ -7,18 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
 using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 
 namespace PlugNPlayBackend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
+        private readonly IConfiguration _config;
 
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService, IConfiguration configuration)
         {
             _authService = authService;
+            _config = configuration;
         }
 
         [HttpPost("register")]
