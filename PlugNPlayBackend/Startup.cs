@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
+using PlugNPlayBackend.Hubs;
 
 namespace PlugNPlayBackend
 {
@@ -29,6 +30,7 @@ namespace PlugNPlayBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Initializes cross origin resoruce sharing for local hosts in http and https on port 4200
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -41,29 +43,36 @@ namespace PlugNPlayBackend
                                   });
             });
 
+            //Initializes database settings
             services.Configure<PlugNPlayDatabaseSettings>(
                 Configuration.GetSection(nameof(PlugNPlayDatabaseSettings)));
 
+            //Initializes database connection
             services.AddSingleton<IPlugNPlayDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<PlugNPlayDatabaseSettings>>().Value);
 
+            //Initializes SignalR hubs
             services.AddSignalR();
 
+            //Initializes services
             services.AddSingleton<UserService>();
             services.AddSingleton<FriendlistService>();
             services.AddSingleton<AuthService>();
 
+            //Initializes controllers
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //Developer environment check
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            //User initialization
             app.UseCors();
 
             app.UseHttpsRedirection();
@@ -75,6 +84,7 @@ namespace PlugNPlayBackend
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<GlobalHub>("/globalHub");
             });
         }
     }

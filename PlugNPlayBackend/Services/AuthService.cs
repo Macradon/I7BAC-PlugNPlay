@@ -5,29 +5,38 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
-using PlugNPlayBackend.Websockets;
+using PlugNPlayBackend.Hubs;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 
 namespace PlugNPlayBackend.Services
 {
     public class AuthService
     {
+        //Variables
         private readonly IMongoCollection<User> _user;
         private readonly FriendlistService _friendlistService;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
+        private IHubContext<GlobalHub> _hub;
 
-        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, FriendlistService friendlistService)
+        //Constructor
+        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, FriendlistService friendlistService, IHubContext<GlobalHub> hub)
         {
-            _friendlistService = friendlistService;
-
+            //Use data from settings and configurations
             var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
             var database = client.GetDatabase(settings.DatabaseName);
 
+            //Establish link to database collection
             _user = database.GetCollection<User>(settings.UsersCollectionName);
+
+            //Injecct other class dependencies
+            _friendlistService = friendlistService;
+            _hub = hub;
         }
 
+        //Method to update password
         public User PasswordUpdate(string username, string password)
         {
             User tempUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
@@ -36,24 +45,22 @@ namespace PlugNPlayBackend.Services
             return tempUser;
         }
 
+        //Method to log in
         public Token Login(string username, string password)
         {
             Token newToken = new Token();
             //Implement
-            Debug.WriteLine("Username check");
             if(CheckUserExistance(username))
             {
-                Debug.WriteLine("Password check");
                 if (PasswordCheck(username,password))
                 {
-                    Debug.WriteLine("Done check");
                     return newToken;
                 }
             }
-            Debug.WriteLine("Failed checks");
             return null;
         }
 
+        //Method to register
         public bool Register (string username, string password, string email)
         {
             if(!CheckUserExistance(username))
@@ -71,6 +78,7 @@ namespace PlugNPlayBackend.Services
             return false;
         }
 
+        //Method to check if user is registered
         private bool CheckUserExistance(string username)
         {
             var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
@@ -80,12 +88,7 @@ namespace PlugNPlayBackend.Services
             return true;
         }
 
-        private bool ExistanceCheck(string usernam)
-        {
-            //Same as CheckUserExistance -- need to refactor from ClassDiagram
-            return true;
-        }
-
+        //Method to heck if user's password matches given password
         private bool PasswordCheck(string username, string password)
         {
             User checkUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
@@ -102,6 +105,7 @@ namespace PlugNPlayBackend.Services
             }
         }
 
+        //Method to generate a token
         private Token GenerateToken(string username)
         {
             Token newToken = new Token();
