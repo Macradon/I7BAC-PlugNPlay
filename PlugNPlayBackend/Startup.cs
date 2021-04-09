@@ -34,13 +34,15 @@ namespace PlugNPlayBackend
             services.AddCors(options =>
             {
                 options.AddPolicy("PolicyCORS",
-                                              builder =>
-                                              {
-                                                  builder.WithOrigins("https://localhost:4200/",
-                                                                      "http://localhost:4200")
-                                                                      .AllowAnyHeader()
-                                                                      .AllowAnyMethod();
-                                              });
+
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://localhost:4200/",
+                                                          "http://localhost:4200/")
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod();
+                                  });
+d
             });
 
             //Initializes database settings
