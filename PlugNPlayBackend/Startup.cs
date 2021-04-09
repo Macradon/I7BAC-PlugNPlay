@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Hubs;
+using Microsoft.AspNetCore.Cors;
 
 namespace PlugNPlayBackend
 {
@@ -36,7 +37,8 @@ namespace PlugNPlayBackend
                 options.AddPolicy("PolicyCORS",
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:4200/")
+                                      builder.WithOrigins("https://localhost:4200/",
+                                                          "http://localhost:4200/")
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod();
                                   });
