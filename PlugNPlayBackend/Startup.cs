@@ -38,8 +38,8 @@ namespace PlugNPlayBackend
 
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://localhost:4200/",
-                                                          "http://localhost:4200/")
+                                      builder.WithOrigins("https://localhost:4200",
+                                                          "http://localhost:4200")
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod();
                                   });
