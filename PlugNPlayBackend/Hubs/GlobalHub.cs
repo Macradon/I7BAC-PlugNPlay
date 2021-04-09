@@ -10,7 +10,7 @@ namespace PlugNPlayBackend.Hubs
     public class GlobalHub : Hub
     {
         private readonly UserService _userService;
-        private readonly string _globalChat = "GlobalChat";
+        private const string _globalChat = "GlobalChat";
         private static string[] _gameChats;
 
         public GlobalHub(UserService userService)
@@ -18,19 +18,32 @@ namespace PlugNPlayBackend.Hubs
             _userService = userService;
         }
 
+        //Method to send a message to a specified room, either Global Chat or a specific game's room
         public async Task SendMessage(string user, string message, string room)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            switch(room)
+            {
+                case _globalChat:
+                    await Clients.Group(_globalChat).SendAsync("ReceiveGlobalChatMessage", user, message);
+                    break;
+                default:
+                    await Clients.Group(room).SendAsync("ReceiveGameChatMessage", user, message);
+                    break;
+            }
         }
 
+        //On Connected to set up connection id for later use
         public override async Task OnConnectedAsync()
         {
             await Clients.Caller.SendAsync("ConnectedToGlobalHub", Context.ConnectionId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, _globalChat);
             await base.OnConnectedAsync();
         }
 
+        //On disconnected to take care of leaving the hub
         public override async Task OnDisconnectedAsync(Exception e)
         {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, _globalChat);
             await base.OnDisconnectedAsync(e);
         }
 
