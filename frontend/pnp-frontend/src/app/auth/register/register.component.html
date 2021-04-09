@@ -1,0 +1,72 @@
+<form [formGroup]="registerForm">
+  <div fxLayout="column">
+    <mat-form-field fxFlex="1 1 5em">
+      <input
+        matInput
+        type="text"
+        formControlName="username"
+        placeholder="First name"
+      />
+      <mat-error
+        *ngIf="
+          registerForm.get('username').invalid &&
+          registerForm.get('username').touched
+        "
+      >
+        <span>'You must enter a username'</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="">
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+        placeholder="E-mail"
+      />
+      <mat-error
+        *ngIf="
+          registerForm.get('email').invalid && registerForm.get('email').touched
+        "
+      >
+        {{ getEmailErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="">
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        placeholder="Password"
+      />
+      <mat-error
+        *ngIf="
+          registerForm.get('password').invalid &&
+          registerForm.get('password').touched
+        "
+      >
+        {{ getPasswordErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="">
+      <input
+        matInput
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Repeat password"
+      />
+      <mat-error
+        *ngIf="
+          registerForm.invalid && registerForm.get('confirmPassword').touched
+        "
+      >
+        {{ getConfirmPasswordErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+</form>
+
+<button mat-flat-button color="primary" (click)="register()">Register</button>
+<button (click)="redirectLogin()">Login</button>
