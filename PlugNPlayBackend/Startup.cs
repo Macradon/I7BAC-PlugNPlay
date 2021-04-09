@@ -43,7 +43,7 @@ namespace PlugNPlayBackend
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod();
                                   });
-d
+
             });
 
             //Initializes database settings
