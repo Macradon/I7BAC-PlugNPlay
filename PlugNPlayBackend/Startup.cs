@@ -33,14 +33,14 @@ namespace PlugNPlayBackend
             //Initializes cross origin resoruce sharing for local hosts in http and https on port 4200
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("https://localhost:4200/",
-                                                          "http://localhost:4200")
-                                                          .AllowAnyHeader()
-                                                          .AllowAnyMethod();
-                                  });
+                options.AddPolicy("PolicyCORS",
+                                              builder =>
+                                              {
+                                                  builder.WithOrigins("https://localhost:4200/",
+                                                                      "http://localhost:4200")
+                                                                      .AllowAnyHeader()
+                                                                      .AllowAnyMethod();
+                                              });
             });
 
             //Initializes database settings
@@ -73,7 +73,7 @@ namespace PlugNPlayBackend
             }
 
             //User initialization
-            app.UseCors();
+            app.UseCors("PolicyCORS");
 
             app.UseHttpsRedirection();
 

@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { FrontPageComponent } from './frontPage/front-page/front-page.component';
 
-//todo swap from wildcard to auth
 const routes: Routes = [
   {
-    path: '',
+    path: 'auth',
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
+  { path: '', component: FrontPageComponent },
 ];
 
 @NgModule({

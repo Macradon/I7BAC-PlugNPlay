@@ -6,9 +6,10 @@ import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FrontPageComponent } from './frontPage/front-page/front-page.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, FrontPageComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
