@@ -35,6 +35,7 @@ namespace PlugNPlayBackend
             services.AddCors(options =>
             {
                 options.AddPolicy("PolicyCORS",
+
                                   builder =>
                                   {
                                       builder.WithOrigins("https://localhost:4200",
@@ -43,6 +44,7 @@ namespace PlugNPlayBackend
                                                           .AllowAnyMethod()
                                                           .AllowCredentials();
                                   });
+
             });
 
             //Initializes database settings
