@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
+using PlugNPlayBackend.Services.Interfaces;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
@@ -15,17 +16,17 @@ namespace PlugNPlayBackend.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
         private readonly IConfiguration _config;
 
-        public AuthController(AuthService authService, IConfiguration configuration)
+        public AuthController(IAuthService authService, IConfiguration configuration)
         {
             _authService = authService;
             _config = configuration;
         }
 
         [HttpPost("register")]
-        public ActionResult PostRegister(User userObj)
+        public async Task<ActionResult> PostRegister(User userObj)
         {
             var response = _authService.Register(userObj.Username, userObj.Password, userObj.Email);
             Debug.WriteLine("response is " + response);

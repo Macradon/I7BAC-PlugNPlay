@@ -10,10 +10,11 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using PlugNPlayBackend.Services.Interfaces;
 
 namespace PlugNPlayBackend.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         //Variables
         private readonly IMongoCollection<User> _user;
@@ -79,7 +80,7 @@ namespace PlugNPlayBackend.Services
         }
 
         //Method to check if user is registered
-        private bool CheckUserExistance(string username)
+        public bool CheckUserExistance(string username)
         {
             var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
             Debug.WriteLine(username);
@@ -89,7 +90,7 @@ namespace PlugNPlayBackend.Services
         }
 
         //Method to heck if user's password matches given password
-        private bool PasswordCheck(string username, string password)
+        public bool PasswordCheck(string username, string password)
         {
             User checkUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
             switch(_passwordHasher.VerifyHashedPassword(checkUser,checkUser.Password,password))
@@ -106,7 +107,7 @@ namespace PlugNPlayBackend.Services
         }
 
         //Method to generate a token
-        private Token GenerateToken(string username)
+        public Token GenerateToken(string username)
         {
             Token newToken = new Token();
             //Implement token generation

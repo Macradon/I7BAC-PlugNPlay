@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
+using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Hubs;
 using Microsoft.AspNetCore.Cors;
 
@@ -61,7 +62,7 @@ namespace PlugNPlayBackend
             //Initializes services
             services.AddSingleton<UserService>();
             services.AddSingleton<FriendlistService>();
-            services.AddSingleton<AuthService>();
+            services.AddSingleton<IAuthService, AuthService>();
 
             //Initializes controllers
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;
