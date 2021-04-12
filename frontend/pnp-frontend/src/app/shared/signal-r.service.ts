@@ -11,17 +11,19 @@ export class SignalRService {
 
   public connect = () => {
     this.hubConnection = new HubConnectionBuilder()
-      //.withUrl("https://chessdatabasebackendapi.azurewebsites.net/games")
-      .withUrl('https://localhost:5001/globalHub')
+      .withUrl('https://plugnplaybackend.azurewebsites.net/globalHub')
+      //.withUrl('https://localhost:5001/globalHub')
       .build();
 
     this.hubConnection
       .start()
       .then(() => {
-        console.log('Game connection started');
+        console.log('Websocket successfully connected');
         this.registerEventEmitters();
       })
-      .catch((err) => console.log('Error while starting connection: ' + err));
+      .catch((err) =>
+        console.log('Error while starting websocket connection: ' + err)
+      );
   };
 
   registerEventEmitters() {}
