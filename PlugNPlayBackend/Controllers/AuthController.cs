@@ -37,7 +37,7 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult PostLogin(User userObj)
+        public async Task<ActionResult> PostLogin(User userObj)
         {
             var response = _authService.Login(userObj.Username, userObj.Password);
 
@@ -48,14 +48,14 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("password")]
-        public ActionResult ChangePassword(User userObj)
+        public async Task<ActionResult> ChangePassword(User userObj)
         {
             var response = _authService.PasswordUpdate(userObj.Username, userObj.Password);
 
             if (response == null)
                 return Conflict("Something went wrong");
 
-            return Ok();
+            return Ok("Password has been changed");
         }
     }
 }
