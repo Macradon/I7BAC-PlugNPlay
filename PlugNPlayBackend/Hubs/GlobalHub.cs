@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using PlugNPlayBackend.Services;
+using PlugNPlayBackend.Models;
 
 namespace PlugNPlayBackend.Hubs
 {
@@ -21,13 +22,19 @@ namespace PlugNPlayBackend.Hubs
         //Method to send a message to a specified room, either Global Chat or a specific game's room
         public async Task SendMessage(string user, string message, string room)
         {
+            var newMessage = new TextMessage()
+            {
+                Sender = user,
+                Message = message
+            };
+
             switch(room)
             {
                 case _globalChat:
-                    await Clients.Group(_globalChat).SendAsync("ReceiveGlobalChatMessage", user, message);
+                    await Clients.Group(_globalChat).SendAsync("ReceiveGlobalChatMessage", newMessage);
                     break;
                 default:
-                    await Clients.Group(room).SendAsync("ReceiveGameChatMessage", user, message);
+                    await Clients.Group(room).SendAsync("ReceiveGameChatMessage", newMessage);
                     break;
             }
         }
