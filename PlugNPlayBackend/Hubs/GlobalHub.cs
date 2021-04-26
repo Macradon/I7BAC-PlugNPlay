@@ -8,6 +8,7 @@ using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Models.Interfaces;
 using PlugNPlayBackend.Models.GameQueue;
+using PlugNPlayBackend.Queue.Interfaces;
 
 namespace PlugNPlayBackend.Hubs
 {
@@ -15,12 +16,12 @@ namespace PlugNPlayBackend.Hubs
     {
         private readonly IUserService _userService;
         private const string _globalChat = "GlobalChat";
-        private static IGameQueue[] _gameQueues;
-        private static int _queueSize;
+        private readonly IQueueManager _queueManager;
 
-        public GlobalHub(IUserService userService)
+        public GlobalHub(IUserService userService, IQueueManager queueManager)
         {
             _userService = userService;
+            _queueManager = queueManager;
         }
 
         //Method to send a message to a specified room, either Global Chat or a specific game's room
@@ -46,9 +47,8 @@ namespace PlugNPlayBackend.Hubs
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
-            string roomName = gameID + _gameQueues.Length.ToString() + _gameQueues.Length.ToString();
-            _ = Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-            await Clients.Caller.SendAsync("QueuedForGame", roomName);
+            //TODO NOT IMPLEMENTED
+            await Clients.Caller.SendAsync("QueuedForGame"/*, roomName*/);
         }
 
         //Method to send a move to a specific game room
