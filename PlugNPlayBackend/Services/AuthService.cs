@@ -17,33 +17,36 @@ namespace PlugNPlayBackend.Services
     public class AuthService : IAuthService
     {
         //Variables
-        private readonly IMongoCollection<User> _user;
+            //private readonly IMongoCollection<User> _user;
         private readonly IFriendlistService _friendlistService;
+        private readonly IUserService _userService;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
         private IHubContext<GlobalHub> _hub;
 
         //Constructor
-        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, IFriendlistService friendlistService, IHubContext<GlobalHub> hub)
+        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, IFriendlistService friendlistService, IUserService userService, IHubContext<GlobalHub> hub)
         {
             //Use data from settings and configurations
             var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
             var database = client.GetDatabase(settings.DatabaseName);
 
             //Establish link to database collection
-            _user = database.GetCollection<User>(settings.UsersCollectionName);
+                //_user = database.GetCollection<User>(settings.UsersCollectionName);
 
             //Injecct other class dependencies
             _friendlistService = friendlistService;
+            _userService = userService;
             _hub = hub;
         }
 
         //Method to update password
         public User PasswordUpdate(string username, string password)
         {
-            User tempUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
-            tempUser.Password = password;
-            _user.ReplaceOne(user => user.Username == username, tempUser);
-            return tempUser;
+            User updatedUserObj = _userService.Get(username);
+            updatedUserObj.Password = password;
+            _userService.Update(username, updatedUserObj);
+            //_user.ReplaceOne(user => user.Username == username, updatedUserObj);
+            return updatedUserObj;
         }
 
         //Method to log in
@@ -66,14 +69,15 @@ namespace PlugNPlayBackend.Services
         {
             if(!CheckUserExistance(username))
             {
-                User registerUser = new User()
+                User registerUserObj = new User()
                 {
                     Username = username,
                     Email = email,
                     Password = password
                 };
-                registerUser.Password = _passwordHasher.HashPassword(registerUser, registerUser.Password);
-                _user.InsertOne(registerUser);
+                registerUserObj.Password = _passwordHasher.HashPassword(registerUserObj, registerUserObj.Password);
+                _userService.Create(registerUserObj);
+                    //_users.InsertOne(registerUserObj);
                 return true;
             }
             return false;
@@ -82,7 +86,8 @@ namespace PlugNPlayBackend.Services
         //Method to check if user is registered
         public bool CheckUserExistance(string username)
         {
-            var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+            var user = _userService.Get(username);
+                //var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
             Debug.WriteLine(username);
             if (user == null)
                 return false;
@@ -92,8 +97,9 @@ namespace PlugNPlayBackend.Services
         //Method to heck if user's password matches given password
         public bool PasswordCheck(string username, string password)
         {
-            User checkUser = _user.Find<User>(user => user.Username == username).FirstOrDefault();
-            switch(_passwordHasher.VerifyHashedPassword(checkUser,checkUser.Password,password))
+            User checkUser = _userService.Get(username);
+                // User checkUser = _userService.Find<User>(user => user.Username == username).FirstOrDefault();
+            switch (_passwordHasher.VerifyHashedPassword(checkUser,checkUser.Password,password))
             {
                 case PasswordVerificationResult.Failed:
                     return false;
