@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using PlugNPlayBackend.Models;
 using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
+using PlugNPlayBackend.Services.Interfaces;
 
 namespace PlugNPlayBackend.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IMongoCollection<User> _users;
 

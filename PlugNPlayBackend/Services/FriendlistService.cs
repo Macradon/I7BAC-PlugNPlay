@@ -10,10 +10,11 @@ using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using PlugNPlayBackend.Services.Interfaces;
 
 namespace PlugNPlayBackend.Services
 {
-    public class FriendlistService
+    public class FriendlistService : IFriendlistService
     {
         //Variables
         private IHubContext<GlobalHub> _hub;

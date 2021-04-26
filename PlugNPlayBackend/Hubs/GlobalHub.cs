@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using PlugNPlayBackend.Services;
+using Newtonsoft.Json;
+using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Models;
+using PlugNPlayBackend.Models.Interfaces;
+using PlugNPlayBackend.Models.GameQueue;
 
 namespace PlugNPlayBackend.Hubs
 {
     public class GlobalHub : Hub
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private const string _globalChat = "GlobalChat";
-        private static string[] _gameChats;
+        private static IGameQueue[] _gameQueues;
+        private static int _queueSize;
 
-        public GlobalHub(UserService userService)
+        public GlobalHub(IUserService userService)
         {
             _userService = userService;
         }
@@ -31,13 +35,28 @@ namespace PlugNPlayBackend.Hubs
             switch(room)
             {
                 case _globalChat:
-                    await Clients.Group(_globalChat).SendAsync("ReceiveGlobalChatMessage", newMessage);
+                    await Clients.Group(_globalChat).SendAsync("ReceiveGlobalChatMessage", JsonConvert.SerializeObject(newMessage));
                     break;
                 default:
-                    await Clients.Group(room).SendAsync("ReceiveGameChatMessage", newMessage);
+                    await Clients.Group(room).SendAsync("ReceiveGameChatMessage", JsonConvert.SerializeObject(newMessage));
                     break;
             }
         }
+
+        //Method to queue up for a game
+        public async Task QueueUpForGame(string gameID)
+        {
+            string roomName = gameID + _gameQueues.Length.ToString() + _gameQueues.Length.ToString();
+            _ = Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+            await Clients.Caller.SendAsync("QueuedForGame", roomName);
+        }
+
+        //Method to send a move to a specific game room
+        public async Task SendMove(string move, string roomName)
+        {
+            await Clients.Group(roomName).SendAsync("ReceiveMove", move);
+        }
+
 
         //On Connected to set up connection id for later use
         public override async Task OnConnectedAsync()

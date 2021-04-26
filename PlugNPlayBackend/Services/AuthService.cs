@@ -18,12 +18,12 @@ namespace PlugNPlayBackend.Services
     {
         //Variables
         private readonly IMongoCollection<User> _user;
-        private readonly FriendlistService _friendlistService;
+        private readonly IFriendlistService _friendlistService;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
         private IHubContext<GlobalHub> _hub;
 
         //Constructor
-        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, FriendlistService friendlistService, IHubContext<GlobalHub> hub)
+        public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, IFriendlistService friendlistService, IHubContext<GlobalHub> hub)
         {
             //Use data from settings and configurations
             var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);

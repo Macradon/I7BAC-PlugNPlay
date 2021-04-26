@@ -60,9 +60,11 @@ namespace PlugNPlayBackend
             services.AddSignalR();
 
             //Initializes services
-            services.AddSingleton<UserService>();
-            services.AddSingleton<FriendlistService>();
+            services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IFriendlistService, FriendlistService>();
+            services.AddSingleton<IProfileService, ProfileService>();
             services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IGamestatService, GameStatService>();
 
             //Initializes controllers
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;
