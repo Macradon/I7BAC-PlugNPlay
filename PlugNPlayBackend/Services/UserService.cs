@@ -28,9 +28,9 @@ namespace PlugNPlayBackend.Services
 
         public User Create(User userObj)
         {
-            userObj.Friendlist.Add("");
-            userObj.GameStats.Add("");
-            userObj.ConnectionID = null;
+            List<string> emptyList = new List<string>();
+            userObj.Friendlist = emptyList;
+            userObj.GameStats = emptyList;
             _users.InsertOne(userObj);
             return userObj;
         }

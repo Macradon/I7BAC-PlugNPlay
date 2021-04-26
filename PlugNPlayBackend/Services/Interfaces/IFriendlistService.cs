@@ -9,5 +9,6 @@ namespace PlugNPlayBackend.Services.Interfaces
     public interface IFriendlistService
     {
         public List<string> Get(string username);
+        public List<string> Add(string username, string friendUsername);
     }
 }
