@@ -17,7 +17,6 @@ namespace PlugNPlayBackend.Hubs
         private readonly IUserService _userService;
         private const string _globalChat = "GlobalChat";
         private readonly IQueueManager _queueManager;
-        private List<string[]> _gameQueue;
 
         public GlobalHub(IUserService userService, IQueueManager queueManager)
         {
@@ -48,9 +47,9 @@ namespace PlugNPlayBackend.Hubs
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
-
-            //TODO NOT IMPLEMENTED
-            await Clients.Caller.SendAsync("QueuedForGame"/*, roomName*/);
+            //TODO implement add to queue
+            _queueManager.AddToQueue(gameID, Context.ConnectionId);
+            await Clients.Caller.SendAsync("QueuedUpForGame"/*, roomName*/);
         }
 
         //Method to send a move to a specific game room

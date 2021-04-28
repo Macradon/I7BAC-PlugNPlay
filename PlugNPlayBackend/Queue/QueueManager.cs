@@ -13,8 +13,31 @@ namespace PlugNPlayBackend.Queue
 
         public QueueManager()
         {
-
+            _gameQueues = new List<IGameQueue>();
         }
 
+        public int AddToQueue(string gameID, string connectionID)
+        {
+            var queueObj = _gameQueues.Find(queue => queue.Id.Equals(gameID));
+            if (queueObj != null)
+            {
+                if (queueObj.GetSize() < 2)
+                {
+                    if (queueObj.AddToQueue(connectionID))
+                    {
+                        return 1;
+                    }
+                    return 2;
+                }
+                _gameQueues.Remove(queueObj);
+                CreateNewQueue(gameID, connectionID);
+            }
+            return 0;
+        }
+
+        private void CreateNewQueue(string gameID, string connectionId)
+        {
+            
+        }
     }
 }

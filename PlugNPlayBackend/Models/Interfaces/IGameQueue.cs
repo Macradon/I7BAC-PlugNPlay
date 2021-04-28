@@ -7,6 +7,9 @@ namespace PlugNPlayBackend.Models.Interfaces
 {
     public interface IGameQueue
     {
-        public string GameID();
+        public string Id { get; set; }
+        public string Name();
+        public bool AddToQueue(string connectionId);
+        public int GetSize();
     }
 }

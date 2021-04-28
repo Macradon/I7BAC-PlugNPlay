@@ -7,5 +7,6 @@ namespace PlugNPlayBackend.Queue.Interfaces
 {
     public interface IQueueManager
     {
+        public int AddToQueue(string gameID, string connectionID);
     }
 }
