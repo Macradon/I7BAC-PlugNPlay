@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
+using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Hubs;
 using Microsoft.AspNetCore.Cors;
 
@@ -59,9 +60,11 @@ namespace PlugNPlayBackend
             services.AddSignalR();
 
             //Initializes services
-            services.AddSingleton<UserService>();
-            services.AddSingleton<FriendlistService>();
-            services.AddSingleton<AuthService>();
+            services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IFriendlistService, FriendlistService>();
+            services.AddSingleton<IProfileService, ProfileService>();
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IGamestatService, GameStatService>();
 
             //Initializes controllers
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;

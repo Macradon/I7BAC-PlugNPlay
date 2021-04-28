@@ -11,8 +11,8 @@ export class SignalRService {
 
   public connect = () => {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('https://plugnplaybackend.azurewebsites.net/globalHub')
-      //.withUrl('https://localhost:5001/globalHub')
+      //.withUrl("https://plugnplaybackend.azurewebsites.net/globalHub")
+      .withUrl('https://localhost:5001/globalHub')
       .build();
 
     this.hubConnection

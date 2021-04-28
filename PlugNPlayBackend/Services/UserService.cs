@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using PlugNPlayBackend.Models;
 using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
+using PlugNPlayBackend.Services.Interfaces;
 
 namespace PlugNPlayBackend.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IMongoCollection<User> _users;
 
@@ -27,6 +28,9 @@ namespace PlugNPlayBackend.Services
 
         public User Create(User userObj)
         {
+            List<string> emptyList = new List<string>();
+            userObj.Friendlist = emptyList;
+            userObj.GameStats = emptyList;
             _users.InsertOne(userObj);
             return userObj;
         }
