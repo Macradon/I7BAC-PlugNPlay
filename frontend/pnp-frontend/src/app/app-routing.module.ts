@@ -12,7 +12,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./games/games.module').then((m) => m.GamesModule),
   },
-  { path: '', component: FrontPageComponent },
+  { path: '', component: FrontPageComponent, pathMatch: 'full' },
 ];
 
 @NgModule({

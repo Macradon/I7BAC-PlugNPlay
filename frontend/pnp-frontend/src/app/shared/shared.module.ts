@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [NavbarComponent],
@@ -18,6 +19,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ReactiveFormsModule,
     MatInputModule,
     FlexLayoutModule,
+    MatCardModule,
   ],
   exports: [
     NavbarComponent,
@@ -27,6 +29,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ReactiveFormsModule,
     MatInputModule,
     FlexLayoutModule,
+    MatCardModule,
   ],
 })
 export class SharedModule {}

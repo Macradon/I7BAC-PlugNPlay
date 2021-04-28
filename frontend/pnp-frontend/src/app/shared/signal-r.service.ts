@@ -12,11 +12,12 @@ export class SignalRService {
   public friendOnline = new EventEmitter<any>();
   public friendRequest = new EventEmitter<any>();
   public friendRequestAccepted = new EventEmitter<any>();
-  public queedForGame = new EventEmitter<any>();
-  public gameStart = new EventEmitter<any>();
-  public recievedGlobalChatMessage = new EventEmitter<any>();
-  public recievedGameChatMessage = new EventEmitter<any>();
-  public gameMoveRecieved = new EventEmitter<any>();
+  public queedForGame = new EventEmitter<string>();
+  public queueMatchFound = new EventEmitter<number>();
+  public gameStart = new EventEmitter<void>();
+  public recievedGlobalChatMessage = new EventEmitter<string>();
+  public recievedGameChatMessage = new EventEmitter<string>();
+  public gameMoveRecieved = new EventEmitter<string>();
 
   constructor() {}
 
@@ -38,20 +39,34 @@ export class SignalRService {
   };
 
   registerEventEmitters() {
-    this.hubConnection.on("QueuedForGame", (data) => {
+    this.hubConnection.on('QueuedForGame', (data) => {
       this.queedForGame.emit(data);
+      this.hubConnection.on('QueueMatchFound', (data) => {
+        this.queueMatchFound.emit(data);
+      });
     });
-    this.hubConnection.on("GameStart", (data) => {
-      this.gameStart.emit(data);
+    this.hubConnection.on('GameStart', () => {
+      this.gameStart.emit();
     });
-    this.hubConnection.on("SendMove", (data) => {
+    this.hubConnection.on('SendMove', (data) => {
       this.gameMoveRecieved.emit(data);
     });
   }
 
-  public sendMesage(cmd: string, room?: string, payload?: any) {
-    this.hubConnection
-      .invoke(cmd, room, JSON.stringify(payload))
-      .catch((err) => console.error(err));
+  public sendMesage(cmd: string, payload?: any) {
+    if (payload)
+      this.hubConnection
+        .invoke(cmd, JSON.stringify(payload))
+        .catch((err) => console.error(err));
+    else this.hubConnection.invoke(cmd).catch((err) => console.error(err));
+  }
+
+  public sendMesageToRoom(cmd: string, room: string, payload?: any) {
+    if (payload)
+      this.hubConnection
+        .invoke(cmd, room, JSON.stringify(payload))
+        .catch((err) => console.error(err));
+    else
+      this.hubConnection.invoke(cmd, room).catch((err) => console.error(err));
   }
 }

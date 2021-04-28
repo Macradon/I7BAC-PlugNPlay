@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SignalRService } from 'src/app/shared/signal-r.service';
 
 @Component({
@@ -7,11 +8,13 @@ import { SignalRService } from 'src/app/shared/signal-r.service';
   styleUrls: ['./front-page.component.scss'],
 })
 export class FrontPageComponent implements OnInit {
-  constructor(private signalR: SignalRService) {}
+  constructor(private signalR: SignalRService, private router: Router) {}
 
   ngOnInit(): void {}
 
-  public send() {}
+  public send() {
+    this.router.navigate(['games/nim']);
+  }
   public connect() {
     this.signalR.connect();
   }

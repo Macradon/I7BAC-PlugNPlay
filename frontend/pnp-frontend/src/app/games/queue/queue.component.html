@@ -1,1 +1,7 @@
-<p>queue works!</p>
+<mat-card *ngIf="game">
+  <mat-card-header>
+    <mat-card-title> You are now queued for {{ game.Name }} </mat-card-title>
+    <mat-card-subtitle>{{ game.Players }} players</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>{{ game.Desc }}</mat-card-content>
+</mat-card>
