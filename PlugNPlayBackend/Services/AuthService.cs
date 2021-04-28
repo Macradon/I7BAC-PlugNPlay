@@ -89,9 +89,9 @@ namespace PlugNPlayBackend.Services
             var user = _userService.Get(username);
                 //var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
             Debug.WriteLine(username);
-            if (user == null)
-                return false;
-            return true;
+            if (user != null)
+                return true;
+            return false;
         }
 
         //Method to heck if user's password matches given password

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Models;
+using PlugNPlayBackend.Services.Interfaces;
 
 namespace PlugNPlayBackend.Controllers
 {
@@ -13,14 +13,14 @@ namespace PlugNPlayBackend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
-        public UserController(UserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet("get")]
         public ActionResult<User> Get(string username)
         {
             var user = _userService.Get(username);

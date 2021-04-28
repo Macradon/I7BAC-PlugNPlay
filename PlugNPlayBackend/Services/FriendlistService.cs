@@ -27,29 +27,39 @@ namespace PlugNPlayBackend.Services
         }
 
         //This sections implements CRUD operations for the service 
-        public List<string> Get(string username)
+        #region CRUD operations
+        public List<string> GetFriendlist(string username)
         {
             var userObj = _userService.Get(username);
-            if (userObj == null)
-                return null;
-            return userObj.Friendlist;
+            if (userObj != null)
+                return userObj.Friendlist;
+            return null;
         }
 
-        public List<string> Add(string username, string friendUsername)
+        public List<string> AddFriend(string username, string friendUsername)
         {
             var userObj = _userService.Get(username);
             var friendUserObj = _userService.Get(friendUsername);
-            if (userObj == null)
+            if (userObj != null && friendUserObj != null)
             {
-                return null;
+                userObj.Friendlist.Add(friendUsername);
+                _userService.Update(userObj.Username, userObj);
+                return userObj.Friendlist;
             }
-            if (friendUsername == null)
-            {
-                return null;
-            }
-            userObj.Friendlist.Add(friendUsername);
-            _userService.Update(username, userObj);
-            return userObj.Friendlist;
+            return null;
         }
+
+        public List<string> RemoveFriend(string username, string friendUsername)
+        {
+            var userObj = _userService.Get(username);
+            if (userObj != null)
+            {
+                userObj.Friendlist.Remove(friendUsername);
+                _userService.Update(userObj.Username, userObj);
+                return userObj.Friendlist;
+            }
+            return null;
+        }
+        #endregion
     }
 }

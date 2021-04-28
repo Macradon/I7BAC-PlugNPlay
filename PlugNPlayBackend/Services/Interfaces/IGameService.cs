@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlugNPlayBackend.Models;
+using MongoDB.Bson;
 
 namespace PlugNPlayBackend.Services.Interfaces
 {
-    public interface IProfileService
+    public interface IGameService
     {
-        public Profile GetProfile(string username);
+        public Task<List<Game>> GetAllGames();
+        public Game GetGame(ObjectId Id);
     }
 }

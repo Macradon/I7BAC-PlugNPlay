@@ -17,6 +17,8 @@ using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Hubs;
 using Microsoft.AspNetCore.Cors;
+using PlugNPlayBackend.Queue.Interfaces;
+using PlugNPlayBackend.Queue;
 
 namespace PlugNPlayBackend
 {
@@ -65,6 +67,10 @@ namespace PlugNPlayBackend
             services.AddSingleton<IProfileService, ProfileService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IGamestatService, GameStatService>();
+            services.AddSingleton<IGameService, GameService>();
+
+            //Initializes QueueManager
+            services.AddSingleton<IQueueManager, QueueManager>();
 
             //Initializes controllers
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;

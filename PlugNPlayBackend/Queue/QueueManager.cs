@@ -11,6 +11,10 @@ namespace PlugNPlayBackend.Queue
     {
         private static List<IGameQueue> _gameQueues;
 
+        public QueueManager()
+        {
+
+        }
 
     }
 }
