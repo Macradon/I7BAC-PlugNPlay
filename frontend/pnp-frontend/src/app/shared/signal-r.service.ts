@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 
 @Injectable({
@@ -6,6 +6,17 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 })
 export class SignalRService {
   private hubConnection: HubConnection;
+  public challengeAccepted = new EventEmitter<any>();
+  public challengeFrom = new EventEmitter<any>();
+  public challengeHesBeenDeclined = new EventEmitter<any>();
+  public friendOnline = new EventEmitter<any>();
+  public friendRequest = new EventEmitter<any>();
+  public friendRequestAccepted = new EventEmitter<any>();
+  public queedForGame = new EventEmitter<any>();
+  public gameStart = new EventEmitter<any>();
+  public recievedGlobalChatMessage = new EventEmitter<any>();
+  public recievedGameChatMessage = new EventEmitter<any>();
+  public gameMoveRecieved = new EventEmitter<any>();
 
   constructor() {}
 
@@ -26,5 +37,21 @@ export class SignalRService {
       );
   };
 
-  registerEventEmitters() {}
+  registerEventEmitters() {
+    this.hubConnection.on("QueuedForGame", (data) => {
+      this.queedForGame.emit(data);
+    });
+    this.hubConnection.on("GameStart", (data) => {
+      this.gameStart.emit(data);
+    });
+    this.hubConnection.on("SendMove", (data) => {
+      this.gameMoveRecieved.emit(data);
+    });
+  }
+
+  public sendMesage(cmd: string, room?: string, payload?: any) {
+    this.hubConnection
+      .invoke(cmd, room, JSON.stringify(payload))
+      .catch((err) => console.error(err));
+  }
 }
