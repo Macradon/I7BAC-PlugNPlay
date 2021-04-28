@@ -9,6 +9,7 @@ using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Models.Interfaces;
 using PlugNPlayBackend.Models.GameQueue;
 using PlugNPlayBackend.Queue.Interfaces;
+using System.Security.Cryptography;
 
 namespace PlugNPlayBackend.Hubs
 {
@@ -47,9 +48,26 @@ namespace PlugNPlayBackend.Hubs
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
-            //TODO implement add to queue
-            _queueManager.AddToQueue(gameID, Context.ConnectionId);
-            await Clients.Caller.SendAsync("QueuedUpForGame"/*, roomName*/);
+            var queue = _queueManager.AddToQueue(gameID, Context.ConnectionId);
+            if (queue.QueueFull)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                await NotifyPlayers(queue.GetParticipants());
+            }
+            else
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+            }
+        }
+
+        private async Task NotifyPlayers(List<string> players)
+        {
+            foreach (string player in players)
+            {
+                await Clients.Client(player).SendAsync("QueueMatchFound");
+            }
         }
 
         //Method to send a move to a specific game room

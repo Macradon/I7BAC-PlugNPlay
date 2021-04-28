@@ -8,12 +8,19 @@ namespace PlugNPlayBackend.Models.GameQueue
 {
     public class NimQueue : IGameQueue
     {
+        private readonly Random random = new Random();
         private List<string> _queue;
+
+        public string Id { get; set; }
+        public string QueueName { get; set; }
+        public bool QueueFull { get; set; }
 
         public NimQueue()
         {
             _queue = new List<string>();
-            this.Id = "60893b5f3665f82c430c5d35";
+            Id = "60893b5f3665f82c430c5d35";
+            QueueName = "Nim" + random.Next(0, 200).ToString() + random.Next(0, 200).ToString();
+            QueueFull = false;
         }
 
         public bool AddToQueue(string connectionId)
@@ -23,11 +30,9 @@ namespace PlugNPlayBackend.Models.GameQueue
             {
                 case 0:
                     _queue.Add(connectionId);
-                    Player1 = connectionId;
-                    break;
+                    return false;
                 case 1:
                     _queue.Add(connectionId);
-                    Player2 = connectionId;
                     return true;
                 default:
                     break;
@@ -35,19 +40,9 @@ namespace PlugNPlayBackend.Models.GameQueue
             return false;
         }
 
-        public int GetSize()
+        public List<string> GetParticipants()
         {
-            return _queue.Count;
+            return _queue;
         }
-
-        public string Id { get; set; }
-
-        public string Name()
-        {
-            return "Nim";
-        }
-
-        public string Player1 { get; set; }
-        public string Player2 { get; set; }
     }
 }

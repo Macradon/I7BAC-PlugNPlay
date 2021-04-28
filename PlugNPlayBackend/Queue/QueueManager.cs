@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PlugNPlayBackend.Queue.Interfaces;
 using PlugNPlayBackend.Models.Interfaces;
+using PlugNPlayBackend.Models.GameQueue;
 
 namespace PlugNPlayBackend.Queue
 {
@@ -16,28 +17,32 @@ namespace PlugNPlayBackend.Queue
             _gameQueues = new List<IGameQueue>();
         }
 
-        public int AddToQueue(string gameID, string connectionID)
+        public IGameQueue AddToQueue(string gameID, string connectionID)
         {
-            var queueObj = _gameQueues.Find(queue => queue.Id.Equals(gameID));
-            if (queueObj != null)
-            {
-                if (queueObj.GetSize() < 2)
-                {
-                    if (queueObj.AddToQueue(connectionID))
-                    {
-                        return 1;
-                    }
-                    return 2;
-                }
-                _gameQueues.Remove(queueObj);
-                CreateNewQueue(gameID, connectionID);
-            }
-            return 0;
+            var gameQueue = _gameQueues.Find(queue => queue.Id == gameID);
+            gameQueue.AddToQueue(connectionID);
+            return gameQueue;
         }
 
-        private void CreateNewQueue(string gameID, string connectionId)
+        public IGameQueue GetQueue(int index)
         {
-            
+            if (index > _gameQueues.Count - 1)
+                return null;
+            return _gameQueues.ElementAt(index);
+        }
+
+        private IGameQueue CreateNewQueue(string gameID, string connectionId)
+        {
+            switch(gameID)
+            {
+                case "60893b5f3665f82c430c5d35":
+                    var newQueue = new NimQueue();
+                    newQueue.AddToQueue(connectionId);
+                    _gameQueues.Add(newQueue);
+                    return newQueue;
+                default:
+                    return null;
+            }
         }
     }
 }
