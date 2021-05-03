@@ -11,5 +11,6 @@ namespace PlugNPlayBackend.Services.Interfaces
         public List<string> GetFriendlist(string username);
         public List<string> AddFriend(string username, string friendUsername);
         public List<string> RemoveFriend(string username, string friendUsername);
+        public List<string> UpdateOnlineStatus(string username, string status);
     }
 }

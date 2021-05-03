@@ -49,6 +49,12 @@ namespace PlugNPlayBackend.Services
             return null;
         }
 
+        public List<string> UpdateOnlineStatus(string username, string status)
+        {
+
+            return null;
+        }
+
         public List<string> RemoveFriend(string username, string friendUsername)
         {
             var userObj = _userService.Get(username);
