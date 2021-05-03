@@ -9,8 +9,11 @@ namespace PlugNPlayBackend.Models.Interfaces
     {
         public string Id { get; set; }
         public string QueueName { get; set; }
-        public bool QueueFull { get; set; }
-        public bool AddToQueue(string connectionId);
+        public int InitializeCount { get; set; }
+        public int QueueMaxSize { get; set; }
+        public bool GameInitilization();
+        public bool QueueFull();
+        public void AddToQueue(string connectionId);
         public List<string> GetParticipants();
     }
 }

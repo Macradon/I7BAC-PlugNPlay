@@ -25,6 +25,7 @@ namespace PlugNPlayBackend.Hubs
             _queueManager = queueManager;
         }
 
+        #region Chat
         //Method to send a message to a specified room, either Global Chat or a specific game's room
         public async Task SendMessage(string user, string message, string room)
         {
@@ -44,16 +45,18 @@ namespace PlugNPlayBackend.Hubs
                     break;
             }
         }
+        #endregion
 
+        #region Game Queueing
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
             var queue = _queueManager.AddToQueue(gameID, Context.ConnectionId);
-            if (queue.QueueFull)
+            if (queue.QueueFull())
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
                 await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
-                await NotifyPlayers(queue.GetParticipants());
+                await NotifyPlayers(queue.GetParticipants(), "queue");
             }
             else
             {
@@ -62,21 +65,55 @@ namespace PlugNPlayBackend.Hubs
             }
         }
 
-        private async Task NotifyPlayers(List<string> players)
+        public async Task GameInitializationComplete(string roomName)
         {
-            foreach (string player in players)
+            var queue = _queueManager.GetQueue(roomName);
+            if(queue.GameInitilization())
             {
-                await Clients.Client(player).SendAsync("QueueMatchFound");
+                await NotifyPlayers(queue.GetParticipants(), "start");
+                _queueManager.RemoveQueue(roomName);
             }
         }
 
+        //Helper method to notify players of a QueueMatch or GameStart
+        private async Task NotifyPlayers(List<string> players, string notificationType)
+        {
+            switch (notificationType)
+            {
+                case "queue":
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        await Clients.Client(players[i]).SendAsync("QueueMatchFound", i);
+                    }
+                    break;
+                case "start":
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        await Clients.Client(players[i]).SendAsync("GameStart");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+
+        #region Game Move
         //Method to send a move to a specific game room
         public async Task SendMove(string move, string roomName)
         {
             await Clients.Group(roomName).SendAsync("ReceiveMove", move);
         }
+        #endregion
 
+        #region Game Request
+        public async Task NotifyRequest(string connectionID)
+        {
+            await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
+        }
+        #endregion
 
+        #region Override methods
         //On Connected to set up connection id for later use
         public override async Task OnConnectedAsync()
         {
@@ -91,10 +128,6 @@ namespace PlugNPlayBackend.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, _globalChat);
             await base.OnDisconnectedAsync(e);
         }
-
-        public async Task NotifyRequest(string connectionID)
-        {
-            await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
-        }
+        #endregion
     }
 }

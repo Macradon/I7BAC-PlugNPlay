@@ -19,16 +19,31 @@ namespace PlugNPlayBackend.Queue
 
         public IGameQueue AddToQueue(string gameID, string connectionID)
         {
-            var gameQueue = _gameQueues.Find(queue => queue.Id == gameID);
-            gameQueue.AddToQueue(connectionID);
-            return gameQueue;
+            var gameQueue = _gameQueues.Find(queue => queue.Id.Equals(gameID));
+            if (gameQueue != null)
+            {
+                if (gameQueue.QueueFull())
+                {
+                    return CreateNewQueue(gameID, connectionID);
+                } else
+                {
+                    gameQueue.AddToQueue(connectionID);
+                    return gameQueue;
+                }
+            } else
+            {
+                return CreateNewQueue(gameID, connectionID);
+            }
         }
 
-        public IGameQueue GetQueue(int index)
+        public IGameQueue GetQueue(string roomName)
         {
-            if (index > _gameQueues.Count - 1)
-                return null;
-            return _gameQueues.ElementAt(index);
+            var queue = _gameQueues.Find(queue => queue.QueueName.Equals(roomName));
+            if (queue != null)
+            {
+                return queue;
+            }
+            return null;
         }
 
         private IGameQueue CreateNewQueue(string gameID, string connectionId)
@@ -43,6 +58,11 @@ namespace PlugNPlayBackend.Queue
                 default:
                     return null;
             }
+        }
+        public void RemoveQueue(string queueName)
+        {
+            var queue = _gameQueues.Find(queue => queue.QueueName.Equals(queueName));
+            _gameQueues.Remove(queue);
         }
     }
 }

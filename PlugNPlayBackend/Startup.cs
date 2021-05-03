@@ -19,6 +19,7 @@ using PlugNPlayBackend.Hubs;
 using Microsoft.AspNetCore.Cors;
 using PlugNPlayBackend.Queue.Interfaces;
 using PlugNPlayBackend.Queue;
+using System.Diagnostics;
 
 namespace PlugNPlayBackend
 {
@@ -41,11 +42,16 @@ namespace PlugNPlayBackend
 
                                   builder =>
                                   {
+                                      builder.AllowAnyOrigin()
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod();
+                                      /*
                                       builder.WithOrigins("https://localhost:4200",
                                                           "http://localhost:4200")
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod()
                                                           .AllowCredentials();
+                                      */
                                   });
 
             });
