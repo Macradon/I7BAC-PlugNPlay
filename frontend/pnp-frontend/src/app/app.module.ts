@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FrontPageComponent } from './frontPage/front-page/front-page.component';
+import { SocialModule } from './social/social.module';
 
 @NgModule({
   declarations: [AppComponent, FrontPageComponent],
@@ -17,6 +18,7 @@ import { FrontPageComponent } from './frontPage/front-page/front-page.component'
     SharedModule,
     CommonModule,
     FlexLayoutModule,
+    SocialModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

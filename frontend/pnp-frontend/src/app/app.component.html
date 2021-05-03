@@ -1,4 +1,11 @@
-<app-navbar></app-navbar>
-<div class="margin">
-  <router-outlet></router-outlet>
+<div fxLayout="column">
+  <app-navbar class="navbar" fxFlex="8"></app-navbar>
+  <div class="chat">
+    <div fxLayout="row">
+      <div class="padding" fxFlex="80">
+        <router-outlet></router-outlet>
+      </div>
+      <app-social fxFlex="20" class="chat"></app-social>
+    </div>
+  </div>
 </div>

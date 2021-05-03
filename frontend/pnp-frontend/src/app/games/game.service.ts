@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { SignalRService } from '../shared/signal-r.service';
 import { Game } from './models/game';
 
@@ -7,7 +8,7 @@ import { Game } from './models/game';
   providedIn: 'root',
 })
 export class GameService {
-  public gameActive = false;
+  public $gameActive = new BehaviorSubject<boolean>(false);
   private gameRoomId = '';
   private playerturn = 0;
 
@@ -23,11 +24,14 @@ export class GameService {
   startGame(game: Game, roomId: string, playerTurn: number) {
     this.gameRoomId = roomId;
     this.playerturn = playerTurn;
-
+    this.$gameActive.next(true);
     this.router.navigate([game.Link]);
   }
+  gameOver() {
+    this.$gameActive.next(false);
+  }
 
-  gameInitialized() {
+  private gameInitialized() {
     this.socket.sendMesageToRoom('GameInitializationComplete', this.gameRoomId);
   }
   sendMove(move: any) {

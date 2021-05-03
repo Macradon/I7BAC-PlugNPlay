@@ -1,0 +1,16 @@
+<div fxLayout="column">
+  <div id="msg" class="container">
+    <div class="chat">
+      <div *ngFor="let msg of messages">
+        <div fxLayout="column" class="padding">
+          <div class="username">{{ msg.username }}</div>
+          <div class="message">{{ msg.message }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-input-box" fxLayout="row">
+    <input type="text" fxFlex />
+    <button fxFlex (click)="send()">Send</button>
+  </div>
+</div>
