@@ -28,41 +28,87 @@ namespace PlugNPlayBackend.Services
 
         //This sections implements CRUD operations for the service 
         #region CRUD operations
-        public List<string> GetFriendlist(string username)
+        public List<List<string>> GetFriendlist(string username)
         {
             var userObj = _userService.Get(username);
             if (userObj != null)
-                return userObj.Friendlist;
+            { 
+                List<List<string>> combinedFriendlist = new List<List<string>>();
+                combinedFriendlist.Add(userObj.OfflineFriendlist);
+                combinedFriendlist.Add(userObj.OnlineFriendlist);
+                return combinedFriendlist;
+            }
             return null;
         }
 
-        public List<string> AddFriend(string username, string friendUsername)
+        public List<List<string>> AddFriend(string username, string friendUsername)
         {
             var userObj = _userService.Get(username);
             var friendUserObj = _userService.Get(friendUsername);
             if (userObj != null && friendUserObj != null)
             {
-                userObj.Friendlist.Add(friendUsername);
+                List<List<string>> combinedFriendlist = new List<List<string>>();
+                if (friendUserObj.ConnectionID != null)
+                {
+                    userObj.OnlineFriendlist.Add(friendUserObj.Username);
+                    _userService.Update(userObj.Username, userObj);
+                    friendUserObj.OnlineFriendlist.Add(username);
+                    _userService.Update(friendUserObj.Username, friendUserObj);
+                    combinedFriendlist.Add(userObj.OfflineFriendlist);
+                    combinedFriendlist.Add(userObj.OnlineFriendlist);
+                    return combinedFriendlist;
+                }
+                userObj.OfflineFriendlist.Add(friendUserObj.Username);
                 _userService.Update(userObj.Username, userObj);
-                return userObj.Friendlist;
+                friendUserObj.OnlineFriendlist.Add(userObj.Username);
+                _userService.Update(friendUserObj.Username, friendUserObj);
+                combinedFriendlist.Add(userObj.OfflineFriendlist);
+                combinedFriendlist.Add(userObj.OnlineFriendlist);
+                return combinedFriendlist;
             }
             return null;
         }
 
-        public List<string> UpdateOnlineStatus(string username, string status)
-        {
-
-            return null;
-        }
-
-        public List<string> RemoveFriend(string username, string friendUsername)
+        public List<string> GetOnlineFriends(string username)
         {
             var userObj = _userService.Get(username);
             if (userObj != null)
             {
-                userObj.Friendlist.Remove(friendUsername);
+                return userObj.OnlineFriendlist;
+            }
+            return null;
+        }
+
+        public void UpdateOnlineStatus(string username, string status)
+        {
+            
+
+        }
+
+        public List<List<string>> RemoveFriend(string username, string friendUsername)
+        {
+            var userObj = _userService.Get(username);
+            var friendUserObj = _userService.Get(friendUsername);
+            if (userObj != null && friendUserObj != null)
+            {
+                List<List<string>> combinedFriendlist = new List<List<string>>();
+                if (friendUserObj.ConnectionID != null)
+                {
+                    userObj.OnlineFriendlist.Remove(friendUserObj.Username);
+                    _userService.Update(userObj.Username, userObj);
+                    friendUserObj.OnlineFriendlist.Remove(userObj.Username);
+                    _userService.Update(friendUserObj.Username, friendUserObj);
+                    combinedFriendlist.Add(userObj.OfflineFriendlist);
+                    combinedFriendlist.Add(userObj.OnlineFriendlist);
+                    return combinedFriendlist;
+                }
+                userObj.OfflineFriendlist.Remove(friendUserObj.Username);
                 _userService.Update(userObj.Username, userObj);
-                return userObj.Friendlist;
+                friendUserObj.OnlineFriendlist.Remove(userObj.Username);
+                _userService.Update(friendUserObj.Username, friendUserObj);
+                combinedFriendlist.Add(userObj.OfflineFriendlist);
+                combinedFriendlist.Add(userObj.OnlineFriendlist);
+                return combinedFriendlist;
             }
             return null;
         }

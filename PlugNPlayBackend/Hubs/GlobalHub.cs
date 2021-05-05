@@ -16,12 +16,14 @@ namespace PlugNPlayBackend.Hubs
     public class GlobalHub : Hub
     {
         private readonly IUserService _userService;
+        private readonly IFriendlistService _friendlistService;
         private const string _globalChat = "GlobalChat";
         private readonly IQueueManager _queueManager;
 
-        public GlobalHub(IUserService userService, IQueueManager queueManager)
+        public GlobalHub(IUserService userService, IFriendlistService friendlistService, IQueueManager queueManager)
         {
             _userService = userService;
+            _friendlistService = friendlistService;
             _queueManager = queueManager;
         }
 
@@ -110,6 +112,26 @@ namespace PlugNPlayBackend.Hubs
         public async Task NotifyRequest(string connectionID)
         {
             await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
+        }
+        #endregion
+
+        #region Friendlist
+        public async Task NotifyOnLogin(string username)
+        {
+            var userObj = _userService.Get(username);
+            if (userObj != null)
+            {
+                userObj.ConnectionID = Context.ConnectionId;
+                _userService.Update(userObj.Username, userObj);
+                foreach(string user in userObj.OnlineFriendlist)
+                {
+                    var friend = _userService.Get(user);
+                    if (friend != null)
+                    {
+                        await Clients.Client(friend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                    }
+                }
+            }
         }
         #endregion
 

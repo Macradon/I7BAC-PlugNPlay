@@ -15,7 +15,9 @@ namespace PlugNPlayBackend.Models
 
         public string Username { get; set; }
         public List<string> GameStats { get; set; }
-        public List<string> Friendlist { get; set; }
+        public List<string> OnlineFriendlist { get; set; }
+        public List<string> OfflineFriendlist { get; set; }
+        public List<String> FriendRequests { get; set; }
         public string Password { get; set; }
         public string Email {get;set;}
         public string ConnectionID { get; set; }
