@@ -113,7 +113,7 @@ namespace PlugNPlayBackend.Hubs
         {
             await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
         }
-        #endregion
+        #endregion      
 
         #region Friendlist
         public async Task NotifyOnLogin(string username)
