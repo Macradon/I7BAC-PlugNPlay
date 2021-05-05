@@ -123,12 +123,58 @@ namespace PlugNPlayBackend.Hubs
             {
                 userObj.ConnectionID = Context.ConnectionId;
                 _userService.Update(userObj.Username, userObj);
-                foreach(string user in userObj.OnlineFriendlist)
+                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+
+                foreach(string offlineUser in fullFriendlist[0])
                 {
-                    var friend = _userService.Get(user);
-                    if (friend != null)
+                    var offlineFriend = _userService.Get(offlineUser);
+                    if (offlineFriend != null)
                     {
-                        await Clients.Client(friend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                        offlineFriend.OnlineFriendlist.Add(userObj.Username);
+                        _userService.Update(offlineFriend.Username, offlineFriend);
+                    }
+                }
+
+                foreach(string onlineUser in fullFriendlist[1])
+                {
+                    var onlineFriend = _userService.Get(onlineUser);
+                    if (onlineFriend != null)
+                    {
+                        onlineFriend.OnlineFriendlist.Add(userObj.Username);
+                        _userService.Update(onlineFriend.Username, onlineFriend);
+                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                    }
+                }
+            }
+        }
+
+        private async Task NotifyOnLogoff(string connectionID)
+        {
+            var userObj = _userService.GetByConnection(connectionID);
+            if (userObj != null)
+            {
+                userObj.ConnectionID = null;
+                _userService.Update(userObj.Username, userObj);
+                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+
+                foreach (string offlineUser in fullFriendlist[0])
+                {
+                    var offlineFriend = _userService.Get(offlineUser);
+                    if (offlineFriend != null)
+                    {
+                        offlineFriend.OnlineFriendlist.Remove(userObj.Username);
+                        _userService.Update(offlineFriend.Username, offlineFriend);
+                    }
+                }
+
+                foreach (string onlineUser in fullFriendlist[1])
+                {
+                    var onlineFriend = _userService.Get(onlineUser);
+                    if (onlineFriend != null)
+                    {
+                        onlineFriend.OnlineFriendlist.Remove(userObj.Username);
+                        _userService.Update(onlineFriend.Username, onlineFriend);
+                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOffline", userObj.Username);
                     }
                 }
             }
@@ -148,6 +194,7 @@ namespace PlugNPlayBackend.Hubs
         public override async Task OnDisconnectedAsync(Exception e)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, _globalChat);
+            await NotifyOnLogoff(Context.ConnectionId);
             await base.OnDisconnectedAsync(e);
         }
         #endregion

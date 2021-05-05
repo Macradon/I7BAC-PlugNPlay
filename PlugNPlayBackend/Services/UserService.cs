@@ -26,10 +26,14 @@ namespace PlugNPlayBackend.Services
         public User Get(string username) =>
             _users.Find<User>(user => user.Username == username).FirstOrDefault();
 
+        public User GetByConnection(string connectionID) =>
+            _users.Find<User>(user => user.ConnectionID == connectionID).FirstOrDefault();
+
         public User Create(User userObj)
         {
             List<string> emptyList = new List<string>();
-            userObj.Friendlist = emptyList;
+            userObj.OfflineFriendlist = emptyList;
+            userObj.OnlineFriendlist = emptyList;
             userObj.GameStats = emptyList;
             _users.InsertOne(userObj);
             return userObj;
