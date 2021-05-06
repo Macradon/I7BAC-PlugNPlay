@@ -17,6 +17,9 @@ using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Hubs;
 using Microsoft.AspNetCore.Cors;
+using PlugNPlayBackend.Queue.Interfaces;
+using PlugNPlayBackend.Queue;
+using System.Diagnostics;
 
 namespace PlugNPlayBackend
 {
@@ -39,11 +42,16 @@ namespace PlugNPlayBackend
 
                                   builder =>
                                   {
+                                      builder.AllowAnyOrigin()
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod();
+                                      /*
                                       builder.WithOrigins("https://localhost:4200",
                                                           "http://localhost:4200")
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod()
                                                           .AllowCredentials();
+                                      */
                                   });
 
             });
@@ -65,6 +73,10 @@ namespace PlugNPlayBackend
             services.AddSingleton<IProfileService, ProfileService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IGamestatService, GameStatService>();
+            services.AddSingleton<IGameService, GameService>();
+
+            //Initializes QueueManager
+            services.AddSingleton<IQueueManager, QueueManager>();
 
             //Initializes controllers
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing()); ;

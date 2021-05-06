@@ -9,21 +9,25 @@ using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Models.Interfaces;
 using PlugNPlayBackend.Models.GameQueue;
 using PlugNPlayBackend.Queue.Interfaces;
+using System.Security.Cryptography;
 
 namespace PlugNPlayBackend.Hubs
 {
     public class GlobalHub : Hub
     {
         private readonly IUserService _userService;
+        private readonly IFriendlistService _friendlistService;
         private const string _globalChat = "GlobalChat";
         private readonly IQueueManager _queueManager;
 
-        public GlobalHub(IUserService userService, IQueueManager queueManager)
+        public GlobalHub(IUserService userService, IFriendlistService friendlistService, IQueueManager queueManager)
         {
             _userService = userService;
+            _friendlistService = friendlistService;
             _queueManager = queueManager;
         }
 
+        #region Chat
         //Method to send a message to a specified room, either Global Chat or a specific game's room
         public async Task SendMessage(string user, string message, string room)
         {
@@ -43,21 +47,141 @@ namespace PlugNPlayBackend.Hubs
                     break;
             }
         }
+        #endregion
 
+        #region Game Queueing
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
-            //TODO NOT IMPLEMENTED
-            await Clients.Caller.SendAsync("QueuedForGame"/*, roomName*/);
+            var queue = _queueManager.AddToQueue(gameID, Context.ConnectionId);
+            if (queue.QueueFull())
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                await NotifyPlayers(queue.GetParticipants(), "queue");
+            }
+            else
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+            }
         }
 
+        public async Task GameInitializationComplete(string roomName)
+        {
+            var queue = _queueManager.GetQueue(roomName);
+            if(queue.GameInitilization())
+            {
+                await NotifyPlayers(queue.GetParticipants(), "start");
+                _queueManager.RemoveQueue(roomName);
+            }
+        }
+
+        //Helper method to notify players of a QueueMatch or GameStart
+        private async Task NotifyPlayers(List<string> players, string notificationType)
+        {
+            switch (notificationType)
+            {
+                case "queue":
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        await Clients.Client(players[i]).SendAsync("QueueMatchFound", i);
+                    }
+                    break;
+                case "start":
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        await Clients.Client(players[i]).SendAsync("GameStart");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+
+        #region Game Move
         //Method to send a move to a specific game room
         public async Task SendMove(string move, string roomName)
         {
             await Clients.Group(roomName).SendAsync("ReceiveMove", move);
         }
+        #endregion
 
+        #region Game Request
+        public async Task NotifyRequest(string connectionID)
+        {
+            await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
+        }
+        #endregion      
 
+        #region Friendlist
+        public async Task NotifyOnLogin(string username)
+        {
+            var userObj = _userService.Get(username);
+            if (userObj != null)
+            {
+                userObj.ConnectionID = Context.ConnectionId;
+                _userService.Update(userObj.Username, userObj);
+                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+
+                foreach(string offlineUser in fullFriendlist[0])
+                {
+                    var offlineFriend = _userService.Get(offlineUser);
+                    if (offlineFriend != null)
+                    {
+                        offlineFriend.OnlineFriendlist.Add(userObj.Username);
+                        _userService.Update(offlineFriend.Username, offlineFriend);
+                    }
+                }
+
+                foreach(string onlineUser in fullFriendlist[1])
+                {
+                    var onlineFriend = _userService.Get(onlineUser);
+                    if (onlineFriend != null)
+                    {
+                        onlineFriend.OnlineFriendlist.Add(userObj.Username);
+                        _userService.Update(onlineFriend.Username, onlineFriend);
+                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                    }
+                }
+            }
+        }
+
+        private async Task NotifyOnLogoff(string connectionID)
+        {
+            var userObj = _userService.GetByConnection(connectionID);
+            if (userObj != null)
+            {
+                userObj.ConnectionID = null;
+                _userService.Update(userObj.Username, userObj);
+                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+
+                foreach (string offlineUser in fullFriendlist[0])
+                {
+                    var offlineFriend = _userService.Get(offlineUser);
+                    if (offlineFriend != null)
+                    {
+                        offlineFriend.OnlineFriendlist.Remove(userObj.Username);
+                        _userService.Update(offlineFriend.Username, offlineFriend);
+                    }
+                }
+
+                foreach (string onlineUser in fullFriendlist[1])
+                {
+                    var onlineFriend = _userService.Get(onlineUser);
+                    if (onlineFriend != null)
+                    {
+                        onlineFriend.OnlineFriendlist.Remove(userObj.Username);
+                        _userService.Update(onlineFriend.Username, onlineFriend);
+                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOffline", userObj.Username);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Override methods
         //On Connected to set up connection id for later use
         public override async Task OnConnectedAsync()
         {
@@ -70,12 +194,9 @@ namespace PlugNPlayBackend.Hubs
         public override async Task OnDisconnectedAsync(Exception e)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, _globalChat);
+            await NotifyOnLogoff(Context.ConnectionId);
             await base.OnDisconnectedAsync(e);
         }
-
-        public async Task NotifyRequest(string connectionID)
-        {
-            await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
-        }
+        #endregion
     }
 }

@@ -8,16 +8,50 @@ namespace PlugNPlayBackend.Models.GameQueue
 {
     public class NimQueue : IGameQueue
     {
-        public bool queueFull = false;
+        private readonly Random random = new Random();
+        private List<string> _queue;
 
-        public string GameID()
+        public string Id { get; set; }
+        public string QueueName { get; set; }
+        public int InitializeCount { get; set; }
+        public int QueueMaxSize { get; set; }
+
+        public NimQueue()
         {
-            return "nim";
+            _queue = new List<string>();
+            Id = "60893b5f3665f82c430c5d35";
+            QueueName = "Nim" + random.Next(0, 200).ToString() + random.Next(0, 200).ToString();
+            QueueMaxSize = 2;
+            InitializeCount = 0;
         }
 
-        public string Player1 { get; set; }
-        public string Player2 { get; set; }
+        public bool QueueFull()
+        {
+            if (_queue.Count == QueueMaxSize)
+            {
+                return true;
+            }
+            return false;
+        }
 
+        public void AddToQueue(string connectionId)
+        {
+            _queue.Add(connectionId);
+        }
 
+        public List<string> GetParticipants()
+        {
+            return _queue;
+        }
+
+        public bool GameInitilization()
+        {
+            InitializeCount++;
+            if(InitializeCount == _queue.Count)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
