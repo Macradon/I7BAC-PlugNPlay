@@ -12,12 +12,12 @@ export class SignalRService {
   public friendOnline = new EventEmitter<any>();
   public friendRequest = new EventEmitter<any>();
   public friendRequestAccepted = new EventEmitter<any>();
-  public queedForGame = new EventEmitter<string>();
+  public queuedForGame = new EventEmitter<string>();
   public queueMatchFound = new EventEmitter<number>();
   public gameStart = new EventEmitter<void>();
-  public recievedGlobalChatMessage = new EventEmitter<string>();
-  public recievedGameChatMessage = new EventEmitter<string>();
-  public gameMoveRecieved = new EventEmitter<string>();
+  public receivedGlobalChatMessage = new EventEmitter<string>();
+  public receivedGameChatMessage = new EventEmitter<string>();
+  public gameMoveReceived = new EventEmitter<string>();
 
   constructor() {}
 
@@ -40,7 +40,7 @@ export class SignalRService {
 
   registerEventEmitters() {
     this.hubConnection.on('QueuedForGame', (data) => {
-      this.queedForGame.emit(data);
+      this.queuedForGame.emit(data);
       this.hubConnection.on('QueueMatchFound', (data) => {
         this.queueMatchFound.emit(data);
       });
@@ -48,23 +48,23 @@ export class SignalRService {
     this.hubConnection.on('GameStart', () => {
       this.gameStart.emit();
     });
-    this.hubConnection.on('SendMove', (data) => {
-      this.gameMoveRecieved.emit(data);
+    this.hubConnection.on('ReceiveMove', (data) => {
+      this.gameMoveReceived.emit(data);
     });
   }
 
-  public sendMesage(cmd: string, payload?: any) {
+  public sendMessage(cmd: string, payload?: any) {
     if (payload)
       this.hubConnection
-        .invoke(cmd, JSON.stringify(payload))
+        .invoke(cmd, payload)
         .catch((err) => console.error(err));
     else this.hubConnection.invoke(cmd).catch((err) => console.error(err));
   }
 
-  public sendMesageToRoom(cmd: string, room: string, payload?: any) {
+  public sendMessageToRoom(cmd: string, room: string, payload?: any) {
     if (payload)
       this.hubConnection
-        .invoke(cmd, room, JSON.stringify(payload))
+        .invoke(cmd, room, payload)
         .catch((err) => console.error(err));
     else
       this.hubConnection.invoke(cmd, room).catch((err) => console.error(err));

@@ -6,7 +6,7 @@ import { SharedModule } from './shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FrontPageComponent } from './frontPage/front-page/front-page.component';
+import { FrontPageComponent } from './frontPage/front-page.component';
 import { SocialModule } from './social/social.module';
 
 @NgModule({

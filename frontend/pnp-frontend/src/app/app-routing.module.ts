@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FrontPageComponent } from './frontPage/front-page/front-page.component';
+import { FrontPageComponent } from './frontPage/front-page.component';
 
 const routes: Routes = [
   {

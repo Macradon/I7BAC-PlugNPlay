@@ -10,33 +10,36 @@ import { Game } from './models/game';
 export class GameService {
   public $gameActive = new BehaviorSubject<boolean>(false);
   private gameRoomId = '';
-  private playerturn = 0;
+  private playerTurn = 0;
 
   constructor(private socket: SignalRService, private router: Router) {}
 
-  getPlayerTurn() {
-    return this.playerturn;
+  public getPlayerTurn() {
+    return this.playerTurn;
   }
 
-  queue(gameId: string) {
-    this.socket.sendMesage('QueueUpForGame', gameId);
+  public queue(gameId: string) {
+    this.socket.sendMessage('QueueUpForGame', gameId);
   }
-  startGame(game: Game, roomId: string, playerTurn: number) {
+  public startGame(game: Game, roomId: string, playerTurn: number) {
     this.gameRoomId = roomId;
-    this.playerturn = playerTurn;
+    this.playerTurn = playerTurn;
     this.$gameActive.next(true);
     this.router.navigate([game.Link]);
   }
-  gameOver() {
+  public gameOver() {
     this.$gameActive.next(false);
   }
 
-  private gameInitialized() {
-    this.socket.sendMesageToRoom('GameInitializationComplete', this.gameRoomId);
+  public gameInitialized() {
+    this.socket.sendMessageToRoom(
+      'GameInitializationComplete',
+      this.gameRoomId
+    );
   }
-  sendMove(move: any) {
-    this.socket.sendMesageToRoom(
-      'ReceiveMove',
+  public sendMove(move: any) {
+    this.socket.sendMessageToRoom(
+      'SendMove',
       this.gameRoomId,
       JSON.stringify(move)
     );
