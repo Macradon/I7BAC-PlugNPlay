@@ -13,7 +13,7 @@ export class FrontPageComponent implements OnInit {
   ngOnInit(): void {}
 
   public send() {
-    this.router.navigate(['games/nim']);
+    this.router.navigate(['games/queue/nim']);
   }
   public connect() {
     this.signalR.connect();
