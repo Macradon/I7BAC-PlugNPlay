@@ -10,6 +10,8 @@ using PlugNPlayBackend.Models.Interfaces;
 using PlugNPlayBackend.Models.GameQueue;
 using PlugNPlayBackend.Queue.Interfaces;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace PlugNPlayBackend.Hubs
 {
@@ -54,16 +56,19 @@ namespace PlugNPlayBackend.Hubs
         public async Task QueueUpForGame(string gameID)
         {
             var queue = _queueManager.AddToQueue(gameID, Context.ConnectionId);
-            if (queue.QueueFull())
+            if (queue != null)
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
-                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
-                await NotifyPlayers(queue.GetParticipants(), "queue");
-            }
-            else
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
-                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                if (queue.QueueFull())
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                    await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                    await NotifyPlayers(queue.GetParticipants(), "queue");
+                }
+                else
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                    await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                }
             }
         }
 
