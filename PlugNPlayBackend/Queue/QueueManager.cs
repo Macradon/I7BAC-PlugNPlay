@@ -11,6 +11,7 @@ namespace PlugNPlayBackend.Queue
     public class QueueManager : IQueueManager
     {
         private static List<IGameQueue> _gameQueues;
+        private readonly Random random = new Random();
 
         public QueueManager()
         {
@@ -59,10 +60,16 @@ namespace PlugNPlayBackend.Queue
                     return null;
             }
         }
+
         public void RemoveQueue(string queueName)
         {
             var queue = _gameQueues.Find(queue => queue.QueueName.Equals(queueName));
             _gameQueues.Remove(queue);
+        }
+
+        public string CreateQueueName(string gameID)
+        {
+            return gameID + random.Next(0,200).ToString() + random.Next(0, 200).ToString();
         }
     }
 }

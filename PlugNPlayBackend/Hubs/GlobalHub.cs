@@ -83,7 +83,7 @@ namespace PlugNPlayBackend.Hubs
         }
 
         //Helper method to notify players of a QueueMatch or GameStart
-        private async Task NotifyPlayers(List<string> players, string notificationType)
+        private async Task NotifyPlayers(List<string> players, string notificationType, string roomName = "default")
         {
             switch (notificationType)
             {
@@ -97,6 +97,12 @@ namespace PlugNPlayBackend.Hubs
                     for (int i = 0; i < players.Count; i++)
                     {
                         await Clients.Client(players[i]).SendAsync("GameStart");
+                    }
+                    break;
+                case "request":
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        await Clients.Client(players[i]).SendAsync("ChallengeAccepted", i, roomName);
                     }
                     break;
                 default:
@@ -114,6 +120,40 @@ namespace PlugNPlayBackend.Hubs
         #endregion
 
         #region Game Request
+        public async Task SendgameRequest(string requestingUsername, string recipientUsername, string gameID)
+        {
+            var requestingUser = _userService.Get(requestingUsername);
+            var recipientUser = _userService.Get(recipientUsername);
+            if (requestingUser != null && recipientUser != null)
+            {
+                await Clients.Client(recipientUser.ConnectionID).SendAsync("ChallengeFrom", requestingUser.Username, gameID);
+            }
+        }
+
+        public async Task ChallengeDecline(string requestingUsername)
+        {
+            var requestingUser = _userService.Get(requestingUsername);
+            if (requestingUser != null)
+            {
+                await Clients.Client(requestingUser.ConnectionID).SendAsync("ChallengeHasBeenDenied");
+            }
+        }
+
+        public async Task ChallengeAccept(string requestingUsername, string gameID)
+        {
+            var requestingUser = _userService.Get(requestingUsername);
+            if (requestingUser != null)
+            {
+                var queueList = new List<string>();
+                var queueName = _queueManager.CreateQueueName(gameID);
+                await Groups.AddToGroupAsync(requestingUser.ConnectionID, queueName);
+                queueList.Add(requestingUser.ConnectionID);
+                await Groups.AddToGroupAsync(Context.ConnectionId, queueName);
+                queueList.Add(Context.ConnectionId);
+                await NotifyPlayers(queueList, "queue", queueName);
+            }
+        }
+
         public async Task NotifyRequest(string connectionID)
         {
             await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);

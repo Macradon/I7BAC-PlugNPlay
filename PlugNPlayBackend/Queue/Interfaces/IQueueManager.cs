@@ -11,5 +11,6 @@ namespace PlugNPlayBackend.Queue.Interfaces
         public IGameQueue AddToQueue(string gameID, string connectionID);
         public IGameQueue GetQueue(string roomName);
         public void RemoveQueue(string roomName);
+        public string CreateQueueName(string gameID);
     }
 }
