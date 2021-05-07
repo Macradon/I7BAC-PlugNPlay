@@ -42,16 +42,12 @@ namespace PlugNPlayBackend
 
                                   builder =>
                                   {
-                                      builder.AllowAnyOrigin()
-                                                          .AllowAnyHeader()
-                                                          .AllowAnyMethod();
-                                      /*
+                                      
                                       builder.WithOrigins("https://localhost:4200",
                                                           "http://localhost:4200")
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod()
                                                           .AllowCredentials();
-                                      */
                                   });
 
             });
