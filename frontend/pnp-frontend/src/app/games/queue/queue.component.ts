@@ -47,9 +47,11 @@ export class QueueComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.socket.queuedForGame.subscribe(
-        (roomId: string) => (this.gameRoomId = roomId)
-      )
+      this.socket.queuedForGame.subscribe((roomId: string) => {
+        console.log(roomId);
+
+        this.gameRoomId = roomId;
+      })
     );
   }
 

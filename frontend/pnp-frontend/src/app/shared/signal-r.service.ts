@@ -39,7 +39,7 @@ export class SignalRService {
   };
 
   registerEventEmitters() {
-    this.hubConnection.on('QueuedForGame', (data) => {
+    this.hubConnection.on('QueuedUpForGame', (data) => {
       this.queuedForGame.emit(data);
       this.hubConnection.on('QueueMatchFound', (data) => {
         this.queueMatchFound.emit(data);
@@ -64,7 +64,7 @@ export class SignalRService {
   public sendMessageToRoom(cmd: string, room: string, payload?: any) {
     if (payload)
       this.hubConnection
-        .invoke(cmd, room, payload)
+        .invoke(cmd, payload, room)
         .catch((err) => console.error(err));
     else
       this.hubConnection.invoke(cmd, room).catch((err) => console.error(err));
