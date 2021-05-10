@@ -1,0 +1,29 @@
+<div fxLayout="column" class="fillHeight">
+  <div *ngIf="requests.length > 0">
+    <div class="category">Pending requests</div>
+    <div *ngFor="let request of requests; last as last" class="elementPadding">
+      <app-request></app-request>
+      <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+    </div>
+  </div>
+
+  <div class="category">Online</div>
+  <mat-divider></mat-divider>
+  <div
+    *ngFor="let friend of onlineFriends; last as last"
+    class="elementPadding"
+  >
+    <app-list-element></app-list-element>
+    <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+  </div>
+  <div class="category">Offline</div>
+  <mat-divider></mat-divider>
+
+  <div
+    *ngFor="let friend of offlineFriends; last as last"
+    class="elementPadding"
+  >
+    <app-list-element></app-list-element>
+    <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+  </div>
+</div>

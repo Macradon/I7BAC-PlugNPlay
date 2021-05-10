@@ -2,8 +2,15 @@
   padding: 2% 2% 2% 5%;
 }
 .chat {
-  height: 88%;
+  height: 100%;
 }
 .navbar {
-  height: 8%;
+  height: 10vh;
+}
+
+.devider {
+  border: 2px;
+  border-style: solid;
+  border-color: black;
+  display: block;
 }

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { element } from 'protractor';
-
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -11,28 +9,6 @@ export class ChatComponent implements OnInit {
 
   constructor() {
     this.messages = [
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
-      { username: 'Guest', message: 'Ello' },
-      { username: 'God', message: 'Yo mama' },
       { username: 'Guest', message: 'Ello' },
       { username: 'God', message: 'Yo mama' },
     ];

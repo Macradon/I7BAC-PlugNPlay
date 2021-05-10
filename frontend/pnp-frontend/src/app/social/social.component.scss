@@ -1,4 +1,18 @@
 .box {
-  border: 2px solid black;
+  border-left: 2px sold black;
   display: block;
+}
+::ng-deep .mat-tab-label {
+  height: 1.5rem !important;
+  min-height: 5px !important;
+  margin: 3px !important;
+  width: 45% !important;
+  min-width: 5px !important;
+}
+.padding {
+  padding: 5px;
+}
+
+.fillHeight {
+  height: 92vh;
 }
