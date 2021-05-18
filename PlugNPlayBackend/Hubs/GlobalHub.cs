@@ -144,7 +144,7 @@ namespace PlugNPlayBackend.Hubs
                 queueList.Add(requestingUser.ConnectionID);
                 await Groups.AddToGroupAsync(Context.ConnectionId, queueName);
                 queueList.Add(Context.ConnectionId);
-                await NotifyPlayers(queueList, "queue", queueName);
+                await NotifyPlayers(queueList, "request", queueName);
             }
         }
 
