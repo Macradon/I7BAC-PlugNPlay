@@ -49,7 +49,7 @@ namespace PlugNPlayBackend.Hubs
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
-            var queue = _queueManager.AddToQueue(gameID, Context.ConnectionId);
+            var queue = await _queueManager.AddToQueue(gameID, Context.ConnectionId);
             if (queue != null)
             {
                 if (queue.QueueFull())
@@ -68,7 +68,7 @@ namespace PlugNPlayBackend.Hubs
 
         public async Task GameInitializationComplete(string roomName)
         {
-            var queue = _queueManager.GetQueue(roomName);
+            var queue = await _queueManager.GetQueue(roomName);
             if(queue.GameInitilization())
             {
                 await NotifyPlayers(queue.GetParticipants(), "start");
@@ -116,8 +116,8 @@ namespace PlugNPlayBackend.Hubs
         #region Game Request
         public async Task SendgameRequest(string requestingUsername, string recipientUsername, string gameID)
         {
-            var requestingUser = _userService.Get(requestingUsername);
-            var recipientUser = _userService.Get(recipientUsername);
+            var requestingUser = await _userService.Get(requestingUsername);
+            var recipientUser = await _userService.Get(recipientUsername);
             if (requestingUser != null && recipientUser != null)
             {
                 await Clients.Client(recipientUser.ConnectionID).SendAsync("ChallengeFrom", requestingUser.Username, gameID);
@@ -126,7 +126,7 @@ namespace PlugNPlayBackend.Hubs
 
         public async Task ChallengeDecline(string requestingUsername)
         {
-            var requestingUser = _userService.Get(requestingUsername);
+            var requestingUser = await _userService.Get(requestingUsername);
             if (requestingUser != null)
             {
                 await Clients.Client(requestingUser.ConnectionID).SendAsync("ChallengeHasBeenDenied");
@@ -135,7 +135,7 @@ namespace PlugNPlayBackend.Hubs
 
         public async Task ChallengeAccept(string requestingUsername, string gameID)
         {
-            var requestingUser = _userService.Get(requestingUsername);
+            var requestingUser = await _userService.Get(requestingUsername);
             if (requestingUser != null)
             {
                 var queueList = new List<string>();
@@ -157,31 +157,22 @@ namespace PlugNPlayBackend.Hubs
         #region Friendlist
         public async Task NotifyOnLogin(string username)
         {
-            var userObj = _userService.Get(username);
+            var userObj = await _userService.Get(username);
             if (userObj != null)
             {
                 userObj.ConnectionID = Context.ConnectionId;
                 _userService.Update(userObj.Username, userObj);
-                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+                var fullFriendlist = userObj.Friendlist;
 
-                foreach(string offlineUser in fullFriendlist[0])
+                foreach (string onlineUser in fullFriendlist)
                 {
-                    var offlineFriend = _userService.Get(offlineUser);
-                    if (offlineFriend != null)
-                    {
-                        offlineFriend.OnlineFriendlist.Add(userObj.Username);
-                        _userService.Update(offlineFriend.Username, offlineFriend);
-                    }
-                }
-
-                foreach(string onlineUser in fullFriendlist[1])
-                {
-                    var onlineFriend = _userService.Get(onlineUser);
+                    var onlineFriend = await _userService.Get(onlineUser);
                     if (onlineFriend != null)
                     {
-                        onlineFriend.OnlineFriendlist.Add(userObj.Username);
-                        _userService.Update(onlineFriend.Username, onlineFriend);
-                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                        if (onlineFriend.ConnectionID != null)
+                        {
+                            await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                        }
                     }
                 }
             }
@@ -189,31 +180,22 @@ namespace PlugNPlayBackend.Hubs
 
         private async Task NotifyOnLogoff(string connectionID)
         {
-            var userObj = _userService.GetByConnection(connectionID);
+            var userObj = await _userService.GetByConnection(connectionID);
             if (userObj != null)
             {
                 userObj.ConnectionID = null;
                 _userService.Update(userObj.Username, userObj);
-                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+                var friendList = userObj.Friendlist;
 
-                foreach (string offlineUser in fullFriendlist[0])
+                foreach (string onlineUser in friendList)
                 {
-                    var offlineFriend = _userService.Get(offlineUser);
-                    if (offlineFriend != null)
-                    {
-                        offlineFriend.OnlineFriendlist.Remove(userObj.Username);
-                        _userService.Update(offlineFriend.Username, offlineFriend);
-                    }
-                }
-
-                foreach (string onlineUser in fullFriendlist[1])
-                {
-                    var onlineFriend = _userService.Get(onlineUser);
+                    var onlineFriend = await _userService.Get(onlineUser);
                     if (onlineFriend != null)
                     {
-                        onlineFriend.OnlineFriendlist.Remove(userObj.Username);
-                        _userService.Update(onlineFriend.Username, onlineFriend);
-                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOffline", userObj.Username);
+                        if (onlineFriend.ConnectionID != null)
+                        {
+                            await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOffline", userObj.Username);
+                        }
                     }
                 }
             }

@@ -10,6 +10,6 @@ namespace PlugNPlayBackend.Services.Interfaces
     public interface IGameService
     {
         public Task<List<Game>> GetAllGames();
-        public Game GetGame(ObjectId Id);
+        public Task<Game> GetGame(ObjectId Id);
     }
 }

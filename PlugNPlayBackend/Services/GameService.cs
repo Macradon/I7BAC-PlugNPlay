@@ -31,7 +31,7 @@ namespace PlugNPlayBackend.Services
             return null;
         }
 
-        public Game GetGame(ObjectId Id) =>
+        public async Task<Game> GetGame(ObjectId Id) =>
             _games.Find(game => game._id == Id).FirstOrDefault();
     }
 }

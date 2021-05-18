@@ -16,19 +16,19 @@ namespace PlugNPlayBackend
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Debug.WriteLine("hello from program");
             IQueueManager newQueueManager = new QueueManager();
-            IGameQueue newGameQueue = newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "123123abcd");
+            IGameQueue newGameQueue = await newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "123123abcd");
             Debug.WriteLine("Added player to queue: " + newGameQueue.QueueName);
             Debug.WriteLine("Queue full: " + newGameQueue.QueueFull().ToString());
-            IGameQueue anotherNewGameQueue = newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "321321dcba");
+            IGameQueue anotherNewGameQueue = await newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "321321dcba");
             Debug.WriteLine("Added player to queue: " + anotherNewGameQueue.QueueName);
             Debug.WriteLine("Queue full: " + anotherNewGameQueue.QueueFull().ToString());
             Debug.WriteLine("Game initilization update for room: " + newGameQueue.QueueName);
             Debug.WriteLine("Game initilization for room " + newGameQueue.QueueName + " complete: " + newGameQueue.GameInitilization().ToString());
-            IGameQueue newAnotherNewGameQueue = newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "444444ddd");
+            IGameQueue newAnotherNewGameQueue = await newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "444444ddd");
             Debug.WriteLine("Added player to queue: " + newAnotherNewGameQueue.QueueName);
             Debug.WriteLine("Queue full: " + newAnotherNewGameQueue.QueueFull().ToString());
             Debug.WriteLine("Game initilization update for room: " + anotherNewGameQueue.QueueName);

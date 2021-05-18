@@ -8,8 +8,8 @@ namespace PlugNPlayBackend.Queue.Interfaces
 {
     public interface IQueueManager
     {
-        public IGameQueue AddToQueue(string gameID, string connectionID);
-        public IGameQueue GetQueue(string roomName);
+        public Task<IGameQueue> AddToQueue(string gameID, string connectionID);
+        public Task<IGameQueue> GetQueue(string roomName);
         public void RemoveQueue(string roomName);
         public string CreateQueueName(string gameID);
     }

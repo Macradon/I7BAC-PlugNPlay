@@ -28,7 +28,7 @@ namespace PlugNPlayBackend.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> PostRegister(User userObj)
         {
-            var response = _authService.Register(userObj.Username, userObj.Password, userObj.Email);
+            var response = await _authService.Register(userObj.Username, userObj.Password, userObj.Email);
             if (response)
                 return Ok("User registered");
 

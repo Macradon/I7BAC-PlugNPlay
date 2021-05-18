@@ -18,9 +18,9 @@ namespace PlugNPlayBackend.Services
             _userService = userService;
         }
 
-        public Profile GetProfile(string username)
+        public async Task<Profile> GetProfile(string username)
         {
-            var userObj = _userService.Get(username);
+            var userObj = await _userService.Get(username);
             if (userObj != null)
             {
                 var userProfile = new Profile()

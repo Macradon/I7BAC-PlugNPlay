@@ -40,9 +40,9 @@ namespace PlugNPlayBackend.Services
         }
 
         //Method to update password
-        public User PasswordUpdate(string username, string password)
+        public async Task<User> PasswordUpdate(string username, string password)
         {
-            User updatedUserObj = _userService.Get(username);
+            User updatedUserObj = await _userService.Get(username);
             updatedUserObj.Password = password;
             _userService.Update(username, updatedUserObj);
             //_user.ReplaceOne(user => user.Username == username, updatedUserObj);
@@ -50,13 +50,14 @@ namespace PlugNPlayBackend.Services
         }
 
         //Method to log in
-        public Token Login(string username, string password)
+        public async Task<Token> Login(string username, string password)
         {
             Token newToken = new Token();
             //Implement
-            if(CheckUserExistance(username))
+            var userExistance = await CheckUserExistance(username);
+            if (!userExistance)
             {
-                if (PasswordCheck(username,password))
+                if (await PasswordCheck(username,password))
                 {
                     return newToken;
                 }
@@ -65,9 +66,10 @@ namespace PlugNPlayBackend.Services
         }
 
         //Method to register
-        public bool Register (string username, string password, string email)
+        public async Task<bool> Register (string username, string password, string email)
         {
-            if(!CheckUserExistance(username))
+            var userExistance = await CheckUserExistance(username);
+            if (!userExistance)
             {
                 User registerUserObj = new User()
                 {
@@ -76,29 +78,26 @@ namespace PlugNPlayBackend.Services
                     Password = password
                 };
                 registerUserObj.Password = _passwordHasher.HashPassword(registerUserObj, registerUserObj.Password);
-                _userService.Create(registerUserObj);
-                    //_users.InsertOne(registerUserObj);
+                await _userService.Create(registerUserObj);
                 return true;
             }
             return false;
         }
 
         //Method to check if user is registered
-        public bool CheckUserExistance(string username)
+        public async Task<bool> CheckUserExistance(string username)
         {
-            var user = _userService.Get(username);
-                //var user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+            var user = await _userService.Get(username);
             Debug.WriteLine(username);
             if (user != null)
                 return true;
             return false;
         }
 
-        //Method to heck if user's password matches given password
-        public bool PasswordCheck(string username, string password)
+        //Method to check if user's password matches given password
+        public async Task<bool> PasswordCheck(string username, string password)
         {
-            User checkUser = _userService.Get(username);
-                // User checkUser = _userService.Find<User>(user => user.Username == username).FirstOrDefault();
+            User checkUser = await _userService.Get(username);
             switch (_passwordHasher.VerifyHashedPassword(checkUser,checkUser.Password,password))
             {
                 case PasswordVerificationResult.Failed:

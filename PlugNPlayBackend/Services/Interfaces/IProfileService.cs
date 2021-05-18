@@ -8,6 +8,6 @@ namespace PlugNPlayBackend.Services.Interfaces
 {
     public interface IProfileService
     {
-        public Profile GetProfile(string username);
+        public Task<Profile> GetProfile(string username);
     }
 }
