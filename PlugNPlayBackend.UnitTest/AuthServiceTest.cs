@@ -31,7 +31,7 @@ namespace PlugNPlayBackend.UnitTest
         }
 
         [Fact]
-        async Task passwordUpdateTest()
+        private async Task passwordUpdateTest()
         {
 
         }

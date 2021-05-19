@@ -19,6 +19,7 @@ namespace PlugNPlayBackend
     {
         public static async Task Main(string[] args)
         {
+            /*
             Debug.WriteLine("hello from program");
             IQueueManager newQueueManager = new QueueManager();
             IGameQueue newGameQueue = await newQueueManager.AddToQueue("60893b5f3665f82c430c5d35", "123123abcd");
@@ -34,7 +35,7 @@ namespace PlugNPlayBackend
             Debug.WriteLine("Queue full: " + newAnotherNewGameQueue.QueueFull().ToString());
             Debug.WriteLine("Game initilization update for room: " + anotherNewGameQueue.QueueName);
             Debug.WriteLine("Game initilization for room " + anotherNewGameQueue.QueueName + " complete: " + anotherNewGameQueue.GameInitilization().ToString());
-
+            */
             CreateHostBuilder(args).Build().Run();
         }
 

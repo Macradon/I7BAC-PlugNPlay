@@ -27,7 +27,7 @@ namespace PlugNPlayBackend.Services
         public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, IFriendlistService friendlistService, IUserService userService, IHubContext<GlobalHub> hub)
         {
             //Use data from settings and configurations
-            var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
+            var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
             //Establish link to database collection

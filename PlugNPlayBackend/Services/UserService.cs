@@ -16,7 +16,7 @@ namespace PlugNPlayBackend.Services
         //Contructor 
         public UserService(IPlugNPlayDatabaseSettings settings, IConfiguration config)
         {
-            var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
+            var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
             _users = database.GetCollection<User>(settings.UsersCollectionName);

@@ -1,9 +1,9 @@
 {
-  "manifestVersion": 1,
+  "manifestVersion": 3,
   "deployments": {
     "aspNetCoreWeb": [
       {
-        "name": "test-dotnet-core",
+        "name": "PlugNPlayBackend",
         "parameters": {
           "appBundle": "site.zip",
           "iisPath": "/",
