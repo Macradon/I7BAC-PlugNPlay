@@ -1,0 +1,15 @@
+{
+  "manifestVersion": 3,
+  "deployments": {
+    "aspNetCoreWeb": [
+      {
+        "name": "PlugNPlayBackend",
+        "parameters": {
+          "archive": "site.zip",
+          "iisPath": "/",
+          "iisWebSite": "Default Web Site"
+        }
+      }
+    ]
+  }
+}
