@@ -39,7 +39,6 @@ namespace PlugNPlayBackend
             services.AddCors(options =>
             {
                 options.AddPolicy("PolicyCORS",
-
                                   builder =>
                                   {
                                       
