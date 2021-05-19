@@ -41,7 +41,6 @@ namespace PlugNPlayBackend
                 options.AddPolicy("PolicyCORS",
                                   builder =>
                                   {
-                                      
                                       builder.WithOrigins("https://localhost:4200",
                                                           "http://localhost:4200")
                                                           .AllowAnyHeader()
@@ -99,6 +98,11 @@ namespace PlugNPlayBackend
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<GlobalHub>("/globalHub");
+            });
+
+            app.Run(context =>
+            {
+                return context.Response.WriteAsync("Hello from ASP.NET Core!");
             });
         }
     }
