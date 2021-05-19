@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,7 +42,10 @@ namespace PlugNPlayBackend
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseIISIntegration()
+                    .UseStartup<Startup>();
                 });
     }
 }
