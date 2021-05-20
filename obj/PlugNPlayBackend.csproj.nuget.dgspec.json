@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend\\PlugNPlayBackend.csproj": {}
+    "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj": {}
   },
   "projects": {
-    "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend\\PlugNPlayBackend.csproj": {
+    "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend\\PlugNPlayBackend.csproj",
+        "projectUniqueName": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj",
         "projectName": "PlugNPlayBackend",
-        "projectPath": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend\\PlugNPlayBackend.csproj",
+        "projectPath": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj",
         "packagesPath": "C:\\Users\\TriNguyen\\.nuget\\packages\\",
-        "outputPath": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend\\obj\\",
+        "outputPath": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -53,10 +53,6 @@
               "target": "Package",
               "version": "[1.1.1, )"
             },
-            "Azure.Security.KeyVault.Secrets": {
-              "target": "Package",
-              "version": "[4.1.0, )"
-            },
             "Microsoft.AspNetCore.Cors": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -65,6 +61,14 @@
               "target": "Package",
               "version": "[3.1.13, )"
             },
+            "Microsoft.AspNetCore.Server.IISIntegration": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Server.Kestrel": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.AspNetCore.SignalR": {
               "target": "Package",
               "version": "[1.1.0, )"
@@ -72,10 +76,6 @@
             "Microsoft.Azure.Services.AppAuthentication": {
               "target": "Package",
               "version": "[1.6.1, )"
-            },
-            "Microsoft.Extensions.Configuration.AzureKeyVault": {
-              "target": "Package",
-              "version": "[3.1.13, )"
             },
             "MongoDB.Driver": {
               "target": "Package",
