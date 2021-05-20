@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "restored": true,
+      "restoreTime": "2021-04-12T08:41:59.9620993Z"
+    }
+  },
+  "parameters": {
+    "PlugNPlayBackend.resourceGroupName": {
+      "Type": "resourceGroup",
+      "Value": "PlugNPlayBackendResourceGroup"
+    },
+    "PlugNPlayBackend.subscriptionId": {
+      "Type": "subscription",
+      "Value": "7d9ba791-a3dc-433d-b243-8981660a6310"
+    },
+    "secrets1.resourceGroupLocation": {
+      "Type": "location",
+      "Value": "southcentralus"
+    },
+    "PlugNPlayBackend.resourceGroupLocation": {
+      "Type": null,
+      "Value": "southcentralus"
+    },
+    "secrets1.resourceGroupName": {
+      "Type": "resourceGroup",
+      "Value": "PlugNPlayBackendResourceGroup"
+    },
+    "PlugNPlayBackend.resourceName": {
+      "Type": null,
+      "Value": "PlugNPlayBackend"
+    },
+    "subscriptionId": {
+      "Type": "subscription",
+      "Value": "7d9ba791-a3dc-433d-b243-8981660a6310"
+    }
+  }
+}
