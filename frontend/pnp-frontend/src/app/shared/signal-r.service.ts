@@ -23,7 +23,7 @@ export class SignalRService {
 
   public connect = () => {
     this.hubConnection = new HubConnectionBuilder()
-      //.withUrl("https://plugnplaybackend.azurewebsites.net/globalHub")
+      //.withUrl("https://plug-n-play-backend.herokuapp.com/globalHub")
       .withUrl('https://localhost:5001/globalHub')
       .build();
 
@@ -39,6 +39,7 @@ export class SignalRService {
   };
 
   registerEventEmitters() {
+    // Queue & Game
     this.hubConnection.on('QueuedUpForGame', (data) => {
       this.queuedForGame.emit(data);
       this.hubConnection.on('QueueMatchFound', (data) => {
@@ -50,6 +51,25 @@ export class SignalRService {
     });
     this.hubConnection.on('ReceiveMove', (data) => {
       this.gameMoveReceived.emit(data);
+    });
+
+    // Chat
+    this.hubConnection.on('ReceivedGlobalChatMessage', (data) => {
+      this.receivedGlobalChatMessage.emit(data);
+    });
+    this.hubConnection.on('ReceivedGameChatMessage', (data) => {
+      this.receivedGameChatMessage.emit(data);
+    });
+
+    // Friend list
+    this.hubConnection.on('FriendOnline', (data) => {
+      this.friendOnline.emit(data);
+    });
+    this.hubConnection.on('FriendRequest', (data) => {
+      this.friendRequest.emit(data);
+    });
+    this.hubConnection.on('FriendRequestAccepted', (data) => {
+      this.friendRequestAccepted.emit(data);
     });
   }
 

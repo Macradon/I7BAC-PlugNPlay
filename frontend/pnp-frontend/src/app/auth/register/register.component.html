@@ -15,6 +15,9 @@
       >
         <span>'You must enter a username'</span>
       </mat-error>
+      <mat-error *ngIf="usernameTaken">
+        <span>Username already taken'</span>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field fxFlex="">
@@ -57,14 +60,15 @@
         formControlName="confirmPassword"
         placeholder="Repeat password"
       />
-      <mat-error
-        *ngIf="
-          registerForm.invalid && registerForm.get('confirmPassword').touched
-        "
-      >
-        {{ getConfirmPasswordErrorMessage() }}
-      </mat-error>
     </mat-form-field>
+    <mat-error
+      *ngIf="
+        this.registerForm.hasError('passwordMismatch') &&
+        registerForm.get('confirmPassword').touched
+      "
+    >
+      {{ getConfirmPasswordErrorMessage() }}
+    </mat-error>
   </div>
 </form>
 
