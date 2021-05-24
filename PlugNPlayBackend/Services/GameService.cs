@@ -17,7 +17,7 @@ namespace PlugNPlayBackend.Services
         //Contructor 
         public GameService(IPlugNPlayDatabaseSettings settings, IConfiguration config)
         {
-            var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
+            var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
             _games = database.GetCollection<Game>(settings.GamesCollectionName);
@@ -31,7 +31,7 @@ namespace PlugNPlayBackend.Services
             return null;
         }
 
-        public Game GetGame(ObjectId Id) =>
+        public async Task<Game> GetGame(ObjectId Id) =>
             _games.Find(game => game._id == Id).FirstOrDefault();
     }
 }

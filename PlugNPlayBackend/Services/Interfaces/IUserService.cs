@@ -8,9 +8,9 @@ namespace PlugNPlayBackend.Services.Interfaces
 {
     public interface IUserService
     {
-        public User Get(string username);
-        public User GetByConnection(string connectionID);
-        public User Create(User userObj);
+        public Task<User> Get(string username);
+        public Task<User> GetByConnection(string connectionID);
+        public Task<User> Create(User userObj);
         public void Update(string username, User userObj);
         public void Remove(string username);
     }

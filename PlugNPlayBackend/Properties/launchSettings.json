@@ -2,6 +2,9 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "environmentVariables": {
+      "DbContext": "mongodb+srv://au564065:ehg64rzu@cluster0.gnm30.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:54697",
       "sslPort": 44364
@@ -24,8 +27,6 @@
       "launchBrowser": true,
       "launchUrl": "weatherforecast",
       "environmentVariables": {
-        "VaultUri": "https://plugnplaybackendvault.vault.azure.net/",
-        "AZURE_USERNAME": "au564065@uni.au.dk",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "nativeDebugging": false,

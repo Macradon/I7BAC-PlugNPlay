@@ -11,20 +11,21 @@ namespace PlugNPlayBackend.Queue
     public class QueueManager : IQueueManager
     {
         private static List<IGameQueue> _gameQueues;
+        private readonly Random random = new Random();
 
         public QueueManager()
         {
             _gameQueues = new List<IGameQueue>();
         }
 
-        public IGameQueue AddToQueue(string gameID, string connectionID)
+        public async Task<IGameQueue> AddToQueue(string gameID, string connectionID)
         {
             var gameQueue = _gameQueues.Find(queue => queue.Id.Equals(gameID));
             if (gameQueue != null)
             {
                 if (gameQueue.QueueFull())
                 {
-                    return CreateNewQueue(gameID, connectionID);
+                    return await CreateNewQueue(gameID, connectionID);
                 } else
                 {
                     gameQueue.AddToQueue(connectionID);
@@ -32,11 +33,11 @@ namespace PlugNPlayBackend.Queue
                 }
             } else
             {
-                return CreateNewQueue(gameID, connectionID);
+                return await CreateNewQueue(gameID, connectionID);
             }
         }
 
-        public IGameQueue GetQueue(string roomName)
+        public async Task<IGameQueue> GetQueue(string roomName)
         {
             var queue = _gameQueues.Find(queue => queue.QueueName.Equals(roomName));
             if (queue != null)
@@ -46,7 +47,7 @@ namespace PlugNPlayBackend.Queue
             return null;
         }
 
-        private IGameQueue CreateNewQueue(string gameID, string connectionId)
+        private async Task<IGameQueue> CreateNewQueue(string gameID, string connectionId)
         {
             switch(gameID)
             {
@@ -59,10 +60,16 @@ namespace PlugNPlayBackend.Queue
                     return null;
             }
         }
+
         public void RemoveQueue(string queueName)
         {
             var queue = _gameQueues.Find(queue => queue.QueueName.Equals(queueName));
             _gameQueues.Remove(queue);
+        }
+
+        public string CreateQueueName(string gameID)
+        {
+            return gameID + random.Next(0,200).ToString() + random.Next(0, 200).ToString();
         }
     }
 }

@@ -21,9 +21,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpGet("get")]
-        public ActionResult<User> Get(string username)
+        public async Task<ActionResult<User>> Get(string username)
         {
-            var user = _userService.Get(username);
+            var user = await _userService.Get(username);
 
             if ( user == null)
                 return NotFound();
@@ -32,9 +32,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPut]
-        public IActionResult Update(User userObj)
+        public async Task<ActionResult<User>> Update(User userObj)
         {
-            var user = _userService.Get(userObj.Username);
+            var user = await _userService.Get(userObj.Username);
 
             if (user == null)
                 return NotFound();
@@ -44,9 +44,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(string username)
+        public async Task<ActionResult<User>> Delete(string username)
         {
-            var user = _userService.Get(username);
+            var user = await _userService.Get(username);
             if ( user == null )
                 return NotFound();
 

@@ -23,7 +23,7 @@ namespace PlugNPlayBackend.Controllers
         [HttpGet("profile")]
         public async Task<ActionResult> GetProfile(string username)
         {
-            var userProfile = _profileService.GetProfile(username);
+            var userProfile = await _profileService.GetProfile(username);
             if (userProfile != null)
             {
                 return Ok(userProfile);

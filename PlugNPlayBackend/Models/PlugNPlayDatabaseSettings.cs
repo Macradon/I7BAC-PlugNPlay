@@ -8,7 +8,6 @@ namespace PlugNPlayBackend.Models
     public class PlugNPlayDatabaseSettings : IPlugNPlayDatabaseSettings
     {
         public string UsersCollectionName { get; set; }
-        public string GameStatCollectionName { get; set; }
         public string GamesCollectionName { get; set; }
         public string ConnectionString { get; set; }
         public string DatabaseName { get; set; }
@@ -17,7 +16,6 @@ namespace PlugNPlayBackend.Models
     public interface IPlugNPlayDatabaseSettings
     {
         public string UsersCollectionName { get; set; }
-        public string GameStatCollectionName { get; set; }
         public string GamesCollectionName { get; set; }
         public string ConnectionString { get; set; }
         public string DatabaseName { get; set; }

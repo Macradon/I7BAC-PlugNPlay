@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Models;
-using PlugNPlayBackend.Models.Interfaces;
-using PlugNPlayBackend.Models.GameQueue;
 using PlugNPlayBackend.Queue.Interfaces;
-using System.Security.Cryptography;
 
 namespace PlugNPlayBackend.Hubs
 {
@@ -53,23 +49,26 @@ namespace PlugNPlayBackend.Hubs
         //Method to queue up for a game
         public async Task QueueUpForGame(string gameID)
         {
-            var queue = _queueManager.AddToQueue(gameID, Context.ConnectionId);
-            if (queue.QueueFull())
+            var queue = await _queueManager.AddToQueue(gameID, Context.ConnectionId);
+            if (queue != null)
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
-                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
-                await NotifyPlayers(queue.GetParticipants(), "queue");
-            }
-            else
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
-                await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                if (queue.QueueFull())
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                    await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                    await NotifyPlayers(queue.GetParticipants(), "queue");
+                }
+                else
+                {
+                    await Groups.AddToGroupAsync(Context.ConnectionId, queue.QueueName);
+                    await Clients.Caller.SendAsync("QueuedUpForGame", queue.QueueName);
+                }
             }
         }
 
         public async Task GameInitializationComplete(string roomName)
         {
-            var queue = _queueManager.GetQueue(roomName);
+            var queue = await _queueManager.GetQueue(roomName);
             if(queue.GameInitilization())
             {
                 await NotifyPlayers(queue.GetParticipants(), "start");
@@ -78,7 +77,7 @@ namespace PlugNPlayBackend.Hubs
         }
 
         //Helper method to notify players of a QueueMatch or GameStart
-        private async Task NotifyPlayers(List<string> players, string notificationType)
+        private async Task NotifyPlayers(List<string> players, string notificationType, string roomName = "default")
         {
             switch (notificationType)
             {
@@ -92,6 +91,12 @@ namespace PlugNPlayBackend.Hubs
                     for (int i = 0; i < players.Count; i++)
                     {
                         await Clients.Client(players[i]).SendAsync("GameStart");
+                    }
+                    break;
+                case "request":
+                    for (int i = 0; i < players.Count; i++)
+                    {
+                        await Clients.Client(players[i]).SendAsync("ChallengeAccepted", i, roomName);
                     }
                     break;
                 default:
@@ -109,6 +114,40 @@ namespace PlugNPlayBackend.Hubs
         #endregion
 
         #region Game Request
+        public async Task SendgameRequest(string requestingUsername, string recipientUsername, string gameID)
+        {
+            var requestingUser = await _userService.Get(requestingUsername);
+            var recipientUser = await _userService.Get(recipientUsername);
+            if (requestingUser != null && recipientUser != null)
+            {
+                await Clients.Client(recipientUser.ConnectionID).SendAsync("ChallengeFrom", requestingUser.Username, gameID);
+            }
+        }
+
+        public async Task ChallengeDecline(string requestingUsername)
+        {
+            var requestingUser = await _userService.Get(requestingUsername);
+            if (requestingUser != null)
+            {
+                await Clients.Client(requestingUser.ConnectionID).SendAsync("ChallengeHasBeenDenied");
+            }
+        }
+
+        public async Task ChallengeAccept(string requestingUsername, string gameID)
+        {
+            var requestingUser = await _userService.Get(requestingUsername);
+            if (requestingUser != null)
+            {
+                var queueList = new List<string>();
+                var queueName = _queueManager.CreateQueueName(gameID);
+                await Groups.AddToGroupAsync(requestingUser.ConnectionID, queueName);
+                queueList.Add(requestingUser.ConnectionID);
+                await Groups.AddToGroupAsync(Context.ConnectionId, queueName);
+                queueList.Add(Context.ConnectionId);
+                await NotifyPlayers(queueList, "request", queueName);
+            }
+        }
+
         public async Task NotifyRequest(string connectionID)
         {
             await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
@@ -118,31 +157,22 @@ namespace PlugNPlayBackend.Hubs
         #region Friendlist
         public async Task NotifyOnLogin(string username)
         {
-            var userObj = _userService.Get(username);
+            var userObj = await _userService.Get(username);
             if (userObj != null)
             {
                 userObj.ConnectionID = Context.ConnectionId;
                 _userService.Update(userObj.Username, userObj);
-                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+                var fullFriendlist = userObj.Friendlist;
 
-                foreach(string offlineUser in fullFriendlist[0])
+                foreach (string onlineUser in fullFriendlist)
                 {
-                    var offlineFriend = _userService.Get(offlineUser);
-                    if (offlineFriend != null)
-                    {
-                        offlineFriend.OnlineFriendlist.Add(userObj.Username);
-                        _userService.Update(offlineFriend.Username, offlineFriend);
-                    }
-                }
-
-                foreach(string onlineUser in fullFriendlist[1])
-                {
-                    var onlineFriend = _userService.Get(onlineUser);
+                    var onlineFriend = await _userService.Get(onlineUser);
                     if (onlineFriend != null)
                     {
-                        onlineFriend.OnlineFriendlist.Add(userObj.Username);
-                        _userService.Update(onlineFriend.Username, onlineFriend);
-                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                        if (onlineFriend.ConnectionID != null)
+                        {
+                            await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOnline", userObj.Username);
+                        }
                     }
                 }
             }
@@ -150,31 +180,22 @@ namespace PlugNPlayBackend.Hubs
 
         private async Task NotifyOnLogoff(string connectionID)
         {
-            var userObj = _userService.GetByConnection(connectionID);
+            var userObj = await _userService.GetByConnection(connectionID);
             if (userObj != null)
             {
                 userObj.ConnectionID = null;
                 _userService.Update(userObj.Username, userObj);
-                var fullFriendlist = _friendlistService.GetFriendlist(userObj.Username);
+                var friendList = userObj.Friendlist;
 
-                foreach (string offlineUser in fullFriendlist[0])
+                foreach (string onlineUser in friendList)
                 {
-                    var offlineFriend = _userService.Get(offlineUser);
-                    if (offlineFriend != null)
-                    {
-                        offlineFriend.OnlineFriendlist.Remove(userObj.Username);
-                        _userService.Update(offlineFriend.Username, offlineFriend);
-                    }
-                }
-
-                foreach (string onlineUser in fullFriendlist[1])
-                {
-                    var onlineFriend = _userService.Get(onlineUser);
+                    var onlineFriend = await _userService.Get(onlineUser);
                     if (onlineFriend != null)
                     {
-                        onlineFriend.OnlineFriendlist.Remove(userObj.Username);
-                        _userService.Update(onlineFriend.Username, onlineFriend);
-                        await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOffline", userObj.Username);
+                        if (onlineFriend.ConnectionID != null)
+                        {
+                            await Clients.Client(onlineFriend.ConnectionID).SendAsync("FriendOffline", userObj.Username);
+                        }
                     }
                 }
             }

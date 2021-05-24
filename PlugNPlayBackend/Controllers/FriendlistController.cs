@@ -23,7 +23,7 @@ namespace PlugNPlayBackend.Controllers
         [HttpGet("get")]
         public async Task<ActionResult> GetFriendlist(string username)
         {
-            var friendList = _friendlistService.GetFriendlist(username);
+            var friendList = await _friendlistService.GetFriendlist(username);
             if (friendList != null)
             {
                 return Ok(friendList);
@@ -34,7 +34,7 @@ namespace PlugNPlayBackend.Controllers
         [HttpPost("add")]
         public async Task<ActionResult> AddFriend(string username, string friendUsername)
         {
-            var friendlist = _friendlistService.AddFriend(username, friendUsername);
+            var friendlist = await _friendlistService.AddFriend(username, friendUsername);
             if (friendlist != null)
             {
                 return Ok(friendlist);
@@ -45,6 +45,11 @@ namespace PlugNPlayBackend.Controllers
         [HttpPost("Remove")]
         public async Task<ActionResult> RemoveFriend(string username, string friendUsername)
         {
+            var friendlist = await _friendlistService.RemoveFriend(username, friendUsername);
+            if (friendlist != null)
+            {
+                return Ok(friendlist);
+            }
             return null;
         }
     }

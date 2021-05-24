@@ -16,24 +16,23 @@ namespace PlugNPlayBackend.Services
         //Contructor 
         public UserService(IPlugNPlayDatabaseSettings settings, IConfiguration config)
         {
-            var client = new MongoClient(config["PlugNPlayDatabaseSettings:PlugNPlayDBContext"]);
+            var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
             _users = database.GetCollection<User>(settings.UsersCollectionName);
         }
 
         //This sections implements CRUD operations for the service 
-        public User Get(string username) =>
+        public async Task<User> Get(string username) =>
             _users.Find<User>(user => user.Username == username).FirstOrDefault();
 
-        public User GetByConnection(string connectionID) =>
+        public async Task<User> GetByConnection(string connectionID) =>
             _users.Find<User>(user => user.ConnectionID == connectionID).FirstOrDefault();
 
-        public User Create(User userObj)
+        public async Task<User> Create(User userObj)
         {
             List<string> emptyList = new List<string>();
-            userObj.OfflineFriendlist = emptyList;
-            userObj.OnlineFriendlist = emptyList;
+            userObj.Friendlist = emptyList;
             userObj.GameStats = emptyList;
             _users.InsertOne(userObj);
             return userObj;
