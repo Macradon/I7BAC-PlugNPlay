@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlugNPlayBackend", "PlugNPlayBackend.csproj", "{86009A44-4F90-470A-83C4-5D184BB5F9BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlugNPlayBackend.UnitTest", "..\PlugNPlayBackend.UnitTest\PlugNPlayBackend.UnitTest.csproj", "{4151971C-0A8E-4087-AC0E-16B8C13385E9}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{86009A44-4F90-470A-83C4-5D184BB5F9BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86009A44-4F90-470A-83C4-5D184BB5F9BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86009A44-4F90-470A-83C4-5D184BB5F9BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4151971C-0A8E-4087-AC0E-16B8C13385E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4151971C-0A8E-4087-AC0E-16B8C13385E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4151971C-0A8E-4087-AC0E-16B8C13385E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4151971C-0A8E-4087-AC0E-16B8C13385E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
