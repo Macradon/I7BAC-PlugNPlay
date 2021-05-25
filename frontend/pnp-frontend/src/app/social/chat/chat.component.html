@@ -10,7 +10,22 @@
     </div>
   </div>
   <div class="chat-input-box" fxLayout="row">
-    <input type="text" fxFlex />
-    <button mat-raised-button color="primary" (click)="send()">Send</button>
+    <mat-form-field fxFlex>
+      <textarea
+        matInput
+        type="text"
+        [formControl]="chatControl"
+        placeholder="Chat message"
+      >
+      </textarea>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="send()"
+      [disabled]="disableSend"
+    >
+      Send
+    </button>
   </div>
 </div>

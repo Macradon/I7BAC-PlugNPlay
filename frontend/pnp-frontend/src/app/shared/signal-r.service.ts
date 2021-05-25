@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { MessageDTO } from './models/message-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +16,8 @@ export class SignalRService {
   public queuedForGame = new EventEmitter<string>();
   public queueMatchFound = new EventEmitter<number>();
   public gameStart = new EventEmitter<void>();
-  public receivedGlobalChatMessage = new EventEmitter<string>();
-  public receivedGameChatMessage = new EventEmitter<string>();
+  public receivedGlobalChatMessage = new EventEmitter<MessageDTO>();
+  public receivedGameChatMessage = new EventEmitter<MessageDTO>();
   public gameMoveReceived = new EventEmitter<string>();
 
   constructor() {}
@@ -54,11 +55,11 @@ export class SignalRService {
     });
 
     // Chat
-    this.hubConnection.on('ReceivedGlobalChatMessage', (data) => {
-      this.receivedGlobalChatMessage.emit(data);
+    this.hubConnection.on('ReceiveGlobalChatMessage', (data) => {
+      this.receivedGlobalChatMessage.emit(JSON.parse(data));
     });
-    this.hubConnection.on('ReceivedGameChatMessage', (data) => {
-      this.receivedGameChatMessage.emit(data);
+    this.hubConnection.on('ReceiveGameChatMessage', (data) => {
+      this.receivedGameChatMessage.emit(JSON.parse(data));
     });
 
     // Friend list
@@ -71,6 +72,36 @@ export class SignalRService {
     this.hubConnection.on('FriendRequestAccepted', (data) => {
       this.friendRequestAccepted.emit(data);
     });
+  }
+
+  public sendGlobalChatMessage(user: string, msg: string) {
+    this.hubConnection
+      .invoke('SendMessage', user, msg, 'GlobalChat')
+      .catch((err) => console.error(err));
+  }
+
+  public sendInGameChatMessage(user: string, msg: string, roomId: string) {
+    this.hubConnection
+      .invoke('SendMessage', user, msg, roomId)
+      .catch((err) => console.error(err));
+  }
+
+  public sendMove(move: string, roomId: string) {
+    this.hubConnection
+      .invoke('SendMove', move, roomId)
+      .catch((err) => console.error(err));
+  }
+
+  public joinQueue(gameId: string) {
+    this.hubConnection
+      .invoke('QueueUpForGame', gameId)
+      .catch((err) => console.error(err));
+  }
+
+  public sendGameInitializationComplete(roomId: string) {
+    this.hubConnection
+      .invoke('GameInitializationComplete', roomId)
+      .catch((err) => console.error(err));
   }
 
   public sendMessage(cmd: string, payload?: any) {

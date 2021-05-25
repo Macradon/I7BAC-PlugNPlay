@@ -1,4 +1,33 @@
-<p>nim works!</p>
-<button mat-stroked-button color="primary" (click)="sendMove(2)">
-  move send
-</button>
+<h1 fxLayoutAlign="center">Nim</h1>
+
+<div class="bold" fxLayout="column">
+  <p fxLayoutAlign="center">Tokens left in the pool:</p>
+  <p fxLayoutAlign="center">{{ this.tokenPool }}</p>
+</div>
+
+<div fxLayoutAlign="center">
+  <button
+    mat-stroked-button
+    color="primary"
+    class="margin"
+    (click)="sendMove(1)"
+  >
+    Take 1
+  </button>
+  <button
+    mat-stroked-button
+    color="primary"
+    class="margin"
+    (click)="sendMove(2)"
+  >
+    Take 2
+  </button>
+  <button
+    mat-stroked-button
+    color="primary"
+    class="margin"
+    (click)="sendMove(3)"
+  >
+    Take 3
+  </button>
+</div>

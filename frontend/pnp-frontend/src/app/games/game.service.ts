@@ -14,12 +14,16 @@ export class GameService {
 
   constructor(private socket: SignalRService, private router: Router) {}
 
+  public getRoomId() {
+    return this.gameRoomId;
+  }
+
   public getPlayerTurn() {
     return this.playerTurn;
   }
 
   public queue(gameId: string) {
-    this.socket.sendMessage('QueueUpForGame', gameId);
+    this.socket.joinQueue(gameId);
   }
   public startGame(game: Game, roomId: string, playerTurn: number) {
     this.gameRoomId = roomId;
@@ -32,16 +36,9 @@ export class GameService {
   }
 
   public gameInitialized() {
-    this.socket.sendMessageToRoom(
-      'GameInitializationComplete',
-      this.gameRoomId
-    );
+    this.socket.sendGameInitializationComplete(this.gameRoomId);
   }
   public sendMove(move: any) {
-    this.socket.sendMessageToRoom(
-      'SendMove',
-      this.gameRoomId,
-      JSON.stringify(move)
-    );
+    this.socket.sendMove(JSON.stringify(move), this.gameRoomId);
   }
 }
