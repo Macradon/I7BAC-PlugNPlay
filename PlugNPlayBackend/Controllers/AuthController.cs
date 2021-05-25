@@ -43,7 +43,7 @@ namespace PlugNPlayBackend.Controllers
             if (response == null)
                 return Conflict("Wrong credentials");
 
-            return Ok( response);
+            return Ok("Logged In: " + response);
         }
 
         [HttpPost("password")]

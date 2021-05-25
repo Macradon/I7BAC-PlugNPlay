@@ -11,8 +11,7 @@ import { User } from './models/user';
   providedIn: 'root',
 })
 export class AuthService {
-  //private baseUrl = 'https://plug-n-play-backend.herokuapp.com/auth';
-  private baseUrl = 'https://localhost:5001/auth';
+  private baseUrl = 'https://plug-n-play-backend.herokuapp.com/auth';
   private guestUser = { username: 'Guest' };
   public $userLoggedIn = new BehaviorSubject<boolean>(false);
   public $currentUser = new BehaviorSubject<User>(this.guestUser);
@@ -23,9 +22,7 @@ export class AuthService {
   }
 
   login(loginDTO: LoginDTO) {
-    return this.http.post<any>(`${this.baseUrl}/login`, loginDTO, {
-      observe: 'response',
-    });
+    return this.http.post<any>(`${this.baseUrl}/login`, loginDTO);
   }
 
   loginSuccessful(user: User) {

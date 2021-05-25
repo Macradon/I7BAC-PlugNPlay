@@ -1,13 +1,6 @@
 <mat-tab-group>
   <mat-tab label="Chat" fxFlex>
-    <app-public-chat
-      *ngIf="!gameActive"
-      class="box padding fillHeight"
-    ></app-public-chat>
-    <app-game-chat
-      *ngIf="gameActive"
-      class="box padding fillHeight"
-    ></app-game-chat>
+    <app-public-chat class="box padding fillHeight"></app-public-chat>
   </mat-tab>
 
   <mat-tab label="Friends" fxFlex>

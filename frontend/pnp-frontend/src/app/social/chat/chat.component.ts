@@ -1,35 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { ChatMessage } from '../models/chat-message';
+import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
-  @Input()
-  public messages: ChatMessage[] = [];
-
-  @Input()
-  public disableSend: boolean = false;
-
-  @Output()
-  public sendMessage = new EventEmitter<string>();
-
-  public chatControl: FormControl;
+  public messages = [];
 
   constructor() {
-    this.chatControl = new FormControl('');
+    this.messages = [
+      { username: 'Guest', message: 'Ello' },
+      { username: 'God', message: 'Yo mama' },
+    ];
+
+    this.messages.push({ username: 'Satan', message: 'No yo mama' });
   }
 
   ngOnInit(): void {}
 
   send() {
-    if (this.chatControl.value !== '') {
-      this.sendMessage.emit(this.chatControl.value);
-      this.chatControl.setValue('');
-      const elem = document.getElementById('msg');
-      elem.scrollTop = elem.scrollHeight + 100;
-    }
+    this.messages.push({ username: 'Satan', message: 'No yo mama' });
+    const elem = document.getElementById('msg');
+    elem.scrollTop = elem.scrollHeight + 100;
   }
 }

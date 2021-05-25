@@ -12,12 +12,10 @@ export class FrontPageComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public newGame() {
+  public send() {
     this.router.navigate(['games/queue/60893b5f3665f82c430c5d35']);
   }
   public connect() {
     this.signalR.connect();
   }
-
-  public redirectToProfile() {}
 }

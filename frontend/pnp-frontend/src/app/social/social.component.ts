@@ -1,24 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { GameService } from '../games/game.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-social',
   templateUrl: './social.component.html',
-  styleUrls: ['./social.component.scss'],
+  styleUrls: ['./social.component.scss']
 })
-export class SocialComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
-  public gameActive = false;
+export class SocialComponent implements OnInit {
 
-  constructor(private gameService: GameService) {}
+  constructor() { }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.gameService.$gameActive.subscribe((bool) => (this.gameActive = bool))
-    );
   }
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
+
 }
