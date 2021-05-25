@@ -38,18 +38,19 @@ namespace PlugNPlayBackend.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> PostLogin(User userObj)
         {
-            var response = _authService.Login(userObj.Username, userObj.Password);
+            var response = await _authService.Login(userObj.Username, userObj.Password);
+            Debug.WriteLine(response);
 
             if (response == null)
                 return Conflict("Wrong credentials");
 
-            return Ok("Logged In: " + response);
+            return Ok(response);
         }
 
         [HttpPost("password")]
         public async Task<ActionResult> ChangePassword(User userObj)
         {
-            var response = _authService.PasswordUpdate(userObj.Username, userObj.Password);
+            var response = await _authService.PasswordUpdate(userObj.Username, userObj.Password);
 
             if (response == null)
                 return Conflict("Something went wrong");

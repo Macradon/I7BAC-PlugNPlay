@@ -66,14 +66,6 @@ D:\Programs\Github\Macradon\I7BAC-PlugNPlay\obj\Debug\net5.0\PlugNPlayBackend.pd
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\appsettings.Development.json
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\appsettings.json
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\web.config
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\angular.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\e2e\tsconfig.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\package-lock.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\package.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\tsconfig.app.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\tsconfig.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\tsconfig.spec.json
-D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\frontend\pnp-frontend\tslint.json
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\libman.json
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\PlugNPlayBackend.exe
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\bin\Debug\net5.0\PlugNPlayBackend.deps.json
@@ -117,3 +109,4 @@ D:\Programs\Github\Macradon\I7BAC-PlugNPlay\obj\Debug\net5.0\scopedcss\bundle\Pl
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\obj\Debug\net5.0\PlugNPlayBackend.RazorTargetAssemblyInfo.cache
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\obj\Debug\net5.0\PlugNPlayBackend.csproj.CopyComplete
 D:\Programs\Github\Macradon\I7BAC-PlugNPlay\obj\Debug\net5.0\PlugNPlayBackend.genruntimeconfig.cache
+D:\Programs\Github\Macradon\I7BAC-PlugNPlay\obj\Debug\net5.0\PlugNPlayBackend.csprojAssemblyReference.cache

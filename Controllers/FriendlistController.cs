@@ -21,31 +21,31 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult> GetFriendlist(string username)
+        public async Task<ActionResult> GetFriendlist(UserPair getPair)
         {
-            var friendList = await _friendlistService.GetFriendlist(username);
+            var friendList = await _friendlistService.GetFriendlist(getPair.Username);
             if (friendList != null)
             {
                 return Ok(friendList);
             }
-            return Conflict("Could not fetch friendlist from " + username);
+            return Conflict("Could not fetch friendlist from " + getPair.Username);
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult> AddFriend(string username, string friendUsername)
+        public async Task<ActionResult> AddFriend(UserPair addPair)
         {
-            var friendlist = await _friendlistService.AddFriend(username, friendUsername);
+            var friendlist = await _friendlistService.AddFriend(addPair.Username, addPair.FriendUsername);
             if (friendlist != null)
             {
                 return Ok(friendlist);
             }
-            return Conflict("Could not add " + friendUsername + "to friendlist");
+            return Conflict("Could not add " + addPair.FriendUsername + "to friendlist");
         }
 
         [HttpPost("Remove")]
-        public async Task<ActionResult> RemoveFriend(string username, string friendUsername)
+        public async Task<ActionResult> RemoveFriend(UserPair removePair)
         {
-            var friendlist = await _friendlistService.RemoveFriend(username, friendUsername);
+            var friendlist = await _friendlistService.RemoveFriend(removePair.Username, removePair.FriendUsername);
             if (friendlist != null)
             {
                 return Ok(friendlist);

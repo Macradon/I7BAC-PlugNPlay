@@ -8,7 +8,7 @@ namespace PlugNPlayBackend.Services.Interfaces
 {
     public interface IFriendlistService
     {
-        public Task<List<List<string>>> GetFriendlist(string username);
+        public Task<FriendList> GetFriendlist(string username);
         public Task<List<string>> AddFriend(string username, string friendUsername);
         public Task<List<string>> RemoveFriend(string username, string friendUsername);
     }

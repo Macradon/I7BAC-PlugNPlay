@@ -52,14 +52,13 @@ namespace PlugNPlayBackend.Services
         //Method to log in
         public async Task<Token> Login(string username, string password)
         {
-            Token newToken = new Token();
             //Implement
-            var userExistance = await CheckUserExistance(username);
-            if (!userExistance)
+            var userExistance = CheckUserExistance(username).Result;
+            if (userExistance)
             {
                 if (await PasswordCheck(username,password))
                 {
-                    return newToken;
+                    return GenerateToken(username);
                 }
             }
             return null;
@@ -88,7 +87,6 @@ namespace PlugNPlayBackend.Services
         public async Task<bool> CheckUserExistance(string username)
         {
             var user = await _userService.Get(username);
-            Debug.WriteLine(username);
             if (user != null)
                 return true;
             return false;
@@ -114,7 +112,7 @@ namespace PlugNPlayBackend.Services
         //Method to generate a token
         public Token GenerateToken(string username)
         {
-            Token newToken = new Token();
+            Token newToken = new Token(username);
             //Implement token generation
             return newToken;
         }

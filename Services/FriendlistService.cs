@@ -27,10 +27,10 @@ namespace PlugNPlayBackend.Services
 
         //This sections implements CRUD operations for the service 
         #region CRUD operations
-        public async Task<List<List<string>>> GetFriendlist(string username)
+        public async Task<FriendList> GetFriendlist(string username)
         {
             var userObj = await _userService.Get(username);
-            List<List<string>> friendList = new List<List<string>>();
+            var friendList = new FriendList();
             if (userObj != null)
             {
                 foreach (string friend in userObj.Friendlist)
@@ -38,10 +38,10 @@ namespace PlugNPlayBackend.Services
                     var friendObj = await _userService.Get(friend);
                     if (friendObj.ConnectionID!=null)
                     {
-                        friendList[0].Add(friend);
+                        friendList.OnlineFriends.Add(friend);
                     } else
                     {
-                        friendList[1].Add(friend);
+                        friendList.OfflineFriends.Add(friend);
                     }
                 }
                 return friendList;
