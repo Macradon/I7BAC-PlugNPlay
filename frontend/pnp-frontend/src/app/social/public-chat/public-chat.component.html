@@ -1,1 +1,5 @@
-<app-chat></app-chat>
+<app-chat
+  [messages]="messages"
+  [disableSend]="!userLoggedIn"
+  (sendMessage)="sendMessage($event)"
+></app-chat>
