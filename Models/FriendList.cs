@@ -7,13 +7,15 @@ namespace PlugNPlayBackend.Models
 {
     public class FriendList
     {
-        public FriendList()
+        public FriendList(List<string> friendRequests)
         {
             OnlineFriends = new List<string>();
             OfflineFriends = new List<string>();
+            FriendRequests = friendRequests;
         }
 
         public List<string> OnlineFriends { get; set; }
         public List<string> OfflineFriends { get; set; }
+        public List<string> FriendRequests { get; set; }
     }
 }

@@ -30,9 +30,9 @@ namespace PlugNPlayBackend.Services
         public async Task<FriendList> GetFriendlist(string username)
         {
             var userObj = await _userService.Get(username);
-            var friendList = new FriendList();
             if (userObj != null)
             {
+                var friendList = new FriendList(userObj.FriendRequests);
                 foreach (string friend in userObj.Friendlist)
                 {
                     var friendObj = await _userService.Get(friend);

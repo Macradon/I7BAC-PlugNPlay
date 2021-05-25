@@ -34,6 +34,7 @@ namespace PlugNPlayBackend.Services
             List<string> emptyList = new List<string>();
             userObj.Friendlist = emptyList;
             userObj.GameStats = emptyList;
+            userObj.FriendRequests = emptyList;
             _users.InsertOne(userObj);
             return userObj;
         }
