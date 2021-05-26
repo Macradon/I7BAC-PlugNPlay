@@ -21,31 +21,38 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult> GetFriendlist(string username)
+        public async Task<ActionResult> GetFriendlist(User userObj)
         {
-            var friendList = await _friendlistService.GetFriendlist(username);
+            var friendList = await _friendlistService.GetFriendlist(userObj.Username);
             if (friendList != null)
             {
                 return Ok(friendList);
             }
-            return Conflict("Could not fetch friendlist from " + username);
+            return Conflict("Could not fetch friendlist from " + userObj.Username);
         }
 
-        [HttpPost("add")]
-        public async Task<ActionResult> AddFriend(string username, string friendUsername)
+        //[HttpPost("add")]
+        //public async Task<ActionResult> AddFriend(string username, string friendUsername)
+        //{
+        //    var friendlist = await _friendlistService.AddFriend(username, friendUsername);
+        //    if (friendlist != null)
+        //    {
+        //        return Ok(friendlist);
+        //    }
+        //    return Conflict("Could not add " + friendUsername + "to friendlist");
+        //}
+
+        [HttpPost("request")]
+        public async Task<ActionResult> SendRequest(UserPair requestPair)
         {
-            var friendlist = await _friendlistService.AddFriend(username, friendUsername);
-            if (friendlist != null)
-            {
-                return Ok(friendlist);
-            }
-            return Conflict("Could not add " + friendUsername + "to friendlist");
+            await _friendlistService.SendRequest(requestPair.Username, requestPair.FriendUsername);
+            return Ok();
         }
 
         [HttpPost("Remove")]
-        public async Task<ActionResult> RemoveFriend(string username, string friendUsername)
+        public async Task<ActionResult> RemoveFriend(UserPair removePair)
         {
-            var friendlist = await _friendlistService.RemoveFriend(username, friendUsername);
+            var friendlist = await _friendlistService.RemoveFriend(removePair.Username, removePair.FriendUsername);
             if (friendlist != null)
             {
                 return Ok(friendlist);

@@ -30,9 +30,6 @@ namespace PlugNPlayBackend.Services
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
-            //Establish link to database collection
-                //_user = database.GetCollection<User>(settings.UsersCollectionName);
-
             //Injecct other class dependencies
             _friendlistService = friendlistService;
             _userService = userService;
@@ -45,21 +42,18 @@ namespace PlugNPlayBackend.Services
             User updatedUserObj = await _userService.Get(username);
             updatedUserObj.Password = password;
             _userService.Update(username, updatedUserObj);
-            //_user.ReplaceOne(user => user.Username == username, updatedUserObj);
             return updatedUserObj;
         }
 
         //Method to log in
         public async Task<Token> Login(string username, string password)
         {
-            Token newToken = new Token();
-            //Implement
-            var userExistance = await CheckUserExistance(username);
-            if (!userExistance)
+            var userExistance = CheckUserExistance(username).Result;
+            if (userExistance)
             {
-                if (await PasswordCheck(username,password))
+                if (await PasswordCheck(username, password))
                 {
-                    return newToken;
+                    return GenerateToken(username);
                 }
             }
             return null;
@@ -88,7 +82,6 @@ namespace PlugNPlayBackend.Services
         public async Task<bool> CheckUserExistance(string username)
         {
             var user = await _userService.Get(username);
-            Debug.WriteLine(username);
             if (user != null)
                 return true;
             return false;
@@ -114,7 +107,7 @@ namespace PlugNPlayBackend.Services
         //Method to generate a token
         public Token GenerateToken(string username)
         {
-            Token newToken = new Token();
+            Token newToken = new Token(username);
             //Implement token generation
             return newToken;
         }
