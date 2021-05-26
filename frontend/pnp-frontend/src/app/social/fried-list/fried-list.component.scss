@@ -1,5 +1,6 @@
 .fillHeight {
-  height: 92vh;
+  height: 86vh;
+  overflow-y: auto;
 }
 
 .category {
@@ -8,4 +9,8 @@
 }
 .elementPadding {
   padding-left: 10px;
+}
+
+.add-friend-input {
+  height: 2rem;
 }

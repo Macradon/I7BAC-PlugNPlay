@@ -1,10 +1,12 @@
-<p>front-page works!</p>
+<h1 fxLayoutAlign="center">Welcome</h1>
 <div fxLayout="column">
-  <button mat-flat-button color="primary" (click)="connect()">
-    webSocket connect
-  </button>
-  <button mat-flat-button color="primary" (click)="newGame()">New gmae</button>
-  <button mat-flat-button color="primary" (click)="redirectToProfile()">
+  <button mat-flat-button color="primary" (click)="newGame()">New game</button>
+  <button
+    *ngIf="userLoggedIn"
+    mat-flat-button
+    color="primary"
+    (click)="redirectToProfile()"
+  >
     Profile
   </button>
 </div>

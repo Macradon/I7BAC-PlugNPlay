@@ -41,15 +41,25 @@ namespace PlugNPlayBackend
                 options.AddPolicy("PolicyCORS",
                                   builder =>
                                   {
+<<<<<<< HEAD
                                       builder.WithOrigins("https://localhost:4200",
                                                           "http://localhost:4200")
                                                           .AllowAnyHeader()
                                                           .AllowAnyMethod()
                                                           .AllowCredentials();
                                      // builder.AllowAnyOrigin();
+=======
+                                      builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+>>>>>>> backend
                                   });
 
             });
+
+            /*builder.WithOrigins("https://localhost:4200",
+                                "http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();*/
 
             //Initializes database settings
             services.Configure<PlugNPlayDatabaseSettings>(

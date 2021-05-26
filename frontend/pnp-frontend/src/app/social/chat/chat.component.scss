@@ -9,6 +9,7 @@
 }
 .chat {
   height: 86vh;
+  overflow-y: auto;
 }
 
 .chat-input {
@@ -17,5 +18,4 @@
 }
 
 .container {
-  overflow-y: auto;
 }

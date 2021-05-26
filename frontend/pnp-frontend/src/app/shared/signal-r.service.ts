@@ -24,8 +24,8 @@ export class SignalRService {
 
   public connect = () => {
     this.hubConnection = new HubConnectionBuilder()
-      //.withUrl("https://plug-n-play-backend.herokuapp.com/globalHub")
-      .withUrl('https://localhost:5001/globalHub')
+      .withUrl('https://plug-n-play-backend.herokuapp.com/globalHub')
+      //.withUrl('https://localhost:5001/globalHub')
       .build();
 
     this.hubConnection
@@ -38,6 +38,10 @@ export class SignalRService {
         console.log('Error while starting websocket connection: ' + err)
       );
   };
+
+  public disconnect() {
+    this.hubConnection.stop();
+  }
 
   registerEventEmitters() {
     // Queue & Game

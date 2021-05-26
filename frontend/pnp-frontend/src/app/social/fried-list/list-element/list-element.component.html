@@ -1,1 +1,7 @@
-<p>list-element works!</p>
+<p>{{ username }}</p>
+<div fxLayoutAlign="space-evenly">
+  <button *ngIf="online" mat-flat-button color="primary" (click)="challenge()">
+    challenge
+  </button>
+  <button mat-flat-button color="primary" (click)="remove()">Remove</button>
+</div>

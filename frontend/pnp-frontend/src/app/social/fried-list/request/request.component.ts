@@ -1,15 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-request',
   templateUrl: './request.component.html',
-  styleUrls: ['./request.component.scss']
+  styleUrls: ['./request.component.scss'],
 })
 export class RequestComponent implements OnInit {
+  @Input()
+  public username: string = '';
 
-  constructor() { }
+  @Output()
+  public acceptedEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  ngOnInit(): void {
+  @Output()
+  public rejectedEvent: EventEmitter<string> = new EventEmitter<string>();
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  accept() {
+    this.acceptedEvent.emit(this.username);
   }
 
+  reject() {
+    this.rejectedEvent.emit(this.username);
+  }
 }

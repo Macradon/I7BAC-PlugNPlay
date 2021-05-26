@@ -2,7 +2,12 @@
   <div *ngIf="requests.length > 0">
     <div class="category">Pending requests</div>
     <div *ngFor="let request of requests; last as last" class="elementPadding">
-      <app-request></app-request>
+      <app-request
+        [username]="request"
+        (acceptedEvent)="onAccept()"
+        (rejectedEvent)="onReject()"
+      >
+      </app-request>
       <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
     </div>
   </div>
@@ -13,7 +18,12 @@
     *ngFor="let friend of onlineFriends; last as last"
     class="elementPadding"
   >
-    <app-list-element></app-list-element>
+    <app-list-element
+      [username]="friend"
+      [online]="true"
+      (challengeEvent)="onChallenge()"
+      (removeEvent)="onRemove()"
+    ></app-list-element>
     <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
   </div>
   <div class="category">Offline</div>
@@ -23,7 +33,29 @@
     *ngFor="let friend of offlineFriends; last as last"
     class="elementPadding"
   >
-    <app-list-element></app-list-element>
+    <app-list-element
+      [username]="friend"
+      [online]="false"
+      (removeEvent)="onRemove()"
+    ></app-list-element>
     <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
   </div>
+</div>
+<div class="add-friend-input" fxLayout="row">
+  <mat-form-field fxFlex>
+    <input
+      matInput
+      type="text"
+      [formControl]="friendControl"
+      placeholder="Username"
+    />
+  </mat-form-field>
+  <button
+    class="add-friend-input"
+    mat-raised-button
+    color="primary"
+    (click)="addFriend()"
+  >
+    Add
+  </button>
 </div>

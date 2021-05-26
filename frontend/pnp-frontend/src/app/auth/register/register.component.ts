@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -50,14 +51,23 @@ export class RegisterComponent {
         Email: this.registerForm.get('email').value,
         Password: this.registerForm.get('password').value,
       })
-      .subscribe((data) => console.log(data));
+      .subscribe(
+        (res) => {
+          this.redirectLogin();
+        },
+        (err: HttpErrorResponse) => {
+          console.log('This even called?');
+          if (err.status === 200) {
+            this.redirectLogin();
+          } else if (err.status === 409) {
+            this.usernameTaken = true;
+          }
+        }
+      );
   }
 
   public redirectLogin() {
-    // this.router.navigate(['login']);
-
-    console.log(this.registerForm.errors);
-    console.log(this.registerForm.hasError('passwordMismatch'));
+    this.router.navigate(['auth/login']);
   }
 
   public passwordMatchValidator(

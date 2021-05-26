@@ -5,7 +5,7 @@
         matInput
         type="text"
         formControlName="username"
-        placeholder="First name"
+        placeholder="Username"
       />
       <mat-error
         *ngIf="
@@ -14,9 +14,6 @@
         "
       >
         <span>'You must enter a username'</span>
-      </mat-error>
-      <mat-error *ngIf="usernameTaken">
-        <span>Username already taken'</span>
       </mat-error>
     </mat-form-field>
 
@@ -68,6 +65,9 @@
       "
     >
       {{ getConfirmPasswordErrorMessage() }}
+    </mat-error>
+    <mat-error *ngIf="usernameTaken">
+      <span>Username already taken</span>
     </mat-error>
   </div>
 </form>
