@@ -40,9 +40,13 @@ namespace PlugNPlayBackend.Services
         public async Task<User> PasswordUpdate(string username, string password)
         {
             User updatedUserObj = await _userService.Get(username);
-            updatedUserObj.Password = password;
-            _userService.Update(username, updatedUserObj);
-            return updatedUserObj;
+            if (updatedUserObj != null)
+            {
+                updatedUserObj.Password = password;
+                _userService.Update(username, updatedUserObj);
+                return updatedUserObj;
+            }
+            return null;
         }
 
         //Method to log in
