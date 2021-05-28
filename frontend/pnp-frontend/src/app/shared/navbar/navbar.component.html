@@ -2,11 +2,28 @@
   <button mat-stroked-button color="primary" (click)="redirectHome()">
     Home
   </button>
-  <button mat-stroked-button color="primary" (click)="redirectRegister()">
+  <button
+    *ngIf="!userLoggedIn"
+    mat-stroked-button
+    color="primary"
+    (click)="redirectRegister()"
+  >
     Register
   </button>
-  <button mat-stroked-button color="primary" (click)="redirectLogin()">
+  <button
+    *ngIf="!userLoggedIn"
+    mat-stroked-button
+    color="primary"
+    (click)="redirectLogin()"
+  >
     Log in
   </button>
-  <button mat-stroked-button color="primary" (click)="logout()">Log out</button>
+  <button
+    *ngIf="userLoggedIn"
+    mat-stroked-button
+    color="primary"
+    (click)="logout()"
+  >
+    Log out
+  </button>
 </div>

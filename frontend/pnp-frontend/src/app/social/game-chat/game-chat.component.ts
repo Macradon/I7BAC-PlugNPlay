@@ -28,7 +28,7 @@ export class GameChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.signalR.receivedGlobalChatMessage.subscribe((data: MessageDTO) => {
+      this.signalR.receivedGameChatMessage.subscribe((data: MessageDTO) => {
         this.messages.push({ username: data.Sender, message: data.Message });
       })
     );
