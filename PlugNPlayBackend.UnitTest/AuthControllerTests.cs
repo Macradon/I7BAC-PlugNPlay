@@ -17,6 +17,7 @@ namespace PlugNPlayBackend.UnitTest
         User existingUser;
         User nonExistingUser;
         User correctUser;
+        Token correctTokenResponse;
         IAuthService authService;
         IConfiguration configuration;
 
@@ -45,6 +46,8 @@ namespace PlugNPlayBackend.UnitTest
                 Password = "CorrectPassword",
                 Email = "ArbitraryEmail"
             };
+
+            correctTokenResponse = new Token(correctUser.Username);
         }
 
         [Fact]
@@ -111,8 +114,7 @@ namespace PlugNPlayBackend.UnitTest
         public async Task PostLogin_LoggedIn()
         {
             // Arrange
-            var token = new Token();
-            authService.Login("IExist", "CorrectPassword").Returns(token);
+            authService.Login("IExist", "CorrectPassword").Returns(correctTokenResponse);
             AuthController systemUnderTest = new AuthController(authService, configuration);
 
             // Act
@@ -120,9 +122,7 @@ namespace PlugNPlayBackend.UnitTest
 
             // Assert
             var result = Assert.IsType<OkObjectResult>(actionResult);
-            // Token is not implemented yet, and therefore does not return an actual token,
-            // but only the signature model name.
-            Assert.Equal("Logged In: PlugNPlayBackend.Models.Token", result.Value);
+            Assert.Equal(correctTokenResponse, result.Value);
         }
 
         [Fact]
