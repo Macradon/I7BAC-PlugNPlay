@@ -18,13 +18,11 @@ namespace PlugNPlayBackend.Services
     {
         //Variables
         private IUserService _userService;
-        private Hub _globalHub;
 
         //Constructor
-        public FriendlistService(IUserService userService, Hub globalHub)
+        public FriendlistService(IUserService userService)
         {
             _userService = userService;
-            _globalHub = globalHub;
         }
 
         //This sections implements CRUD operations for the service 
@@ -89,7 +87,6 @@ namespace PlugNPlayBackend.Services
             {
                 recipient.FriendRequests.Add(requestingUsername);
                 _userService.Update(recipient.Username, recipient);
-                _globalHub.NotifyRequest(recipient.ConnectionID);
             }
         }
 
