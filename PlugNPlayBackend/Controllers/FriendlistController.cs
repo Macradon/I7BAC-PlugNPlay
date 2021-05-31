@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services.Interfaces;
@@ -30,17 +26,6 @@ namespace PlugNPlayBackend.Controllers
             }
             return Conflict("Could not fetch friendlist from " + userObj.Username);
         }
-
-        //[HttpPost("add")]
-        //public async Task<ActionResult> AddFriend(string username, string friendUsername)
-        //{
-        //    var friendlist = await _friendlistService.AddFriend(username, friendUsername);
-        //    if (friendlist != null)
-        //    {
-        //        return Ok(friendlist);
-        //    }
-        //    return Conflict("Could not add " + friendUsername + "to friendlist");
-        //}
 
         [HttpPost("request")]
         public async Task<ActionResult> SendRequest(UserPair requestPair)

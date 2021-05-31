@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Xunit;
 using PlugNPlayBackend.Controllers;
 using PlugNPlayBackend.Services.Interfaces;

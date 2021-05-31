@@ -1,25 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Hubs;
-using Microsoft.AspNetCore.Cors;
 using PlugNPlayBackend.Queue.Interfaces;
 using PlugNPlayBackend.Queue;
-using System.Diagnostics;
 
 namespace PlugNPlayBackend
 {
@@ -41,16 +31,14 @@ namespace PlugNPlayBackend
                 options.AddPolicy("PolicyCORS",
                                   builder =>
                                   {
-                                      builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                        builder.WithOrigins("https://localhost:4200",
+                                        "http://localhost:4200")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
                                   });
 
             });
-
-            /*builder.WithOrigins("https://localhost:4200",
-                                "http://localhost:4200")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();*/
 
             //Initializes database settings
             services.Configure<PlugNPlayDatabaseSettings>(
@@ -100,11 +88,6 @@ namespace PlugNPlayBackend
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<GlobalHub>("/globalHub");
-            });
-
-            app.Run(context =>
-            {
-                return context.Response.WriteAsync("Hello from ASP.NET Core!");
             });
         }
     }
