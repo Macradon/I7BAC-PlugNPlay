@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SignalRService } from 'src/app/shared/signal-r.service';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -12,11 +11,7 @@ import { AuthService } from '../auth/auth.service';
 export class FrontPageComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   public userLoggedIn = false;
-  constructor(
-    private signalR: SignalRService,
-    private router: Router,
-    private auth: AuthService
-  ) {}
+  constructor(private router: Router, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -30,9 +25,6 @@ export class FrontPageComponent implements OnInit, OnDestroy {
 
   public newGame() {
     this.router.navigate(['games/queue/60893b5f3665f82c430c5d35']);
-  }
-  public connect() {
-    this.signalR.connect();
   }
 
   public redirectToProfile() {}

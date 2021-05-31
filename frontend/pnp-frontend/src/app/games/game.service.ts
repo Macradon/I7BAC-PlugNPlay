@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 import { SignalRService } from '../shared/signal-r.service';
 import { Game } from './models/game';
 
@@ -12,7 +13,11 @@ export class GameService {
   private gameRoomId = '';
   private playerTurn = 0;
 
-  constructor(private socket: SignalRService, private router: Router) {}
+  constructor(
+    private socket: SignalRService,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   public getRoomId() {
     return this.gameRoomId;
@@ -33,6 +38,11 @@ export class GameService {
   }
   public gameOver() {
     this.$gameActive.next(false);
+    this.authService.$userLoggedIn.subscribe((bool) => {
+      if (bool) {
+        // send result
+      }
+    });
   }
 
   public gameInitialized() {

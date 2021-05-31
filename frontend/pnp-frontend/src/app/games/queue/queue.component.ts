@@ -32,14 +32,6 @@ export class QueueComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.push(
-      this.route.params.subscribe((params) => {
-        this.gameId = params['id'];
-
-        // TODO API call to load the details here.
-        this.gameService.queue(this.gameId);
-      })
-    );
-    this.subscriptions.push(
       this.socket.queueMatchFound.subscribe((turnNumber: number) => {
         this.playerTurn = turnNumber;
         this.gameService.startGame(this.game, this.gameRoomId, this.playerTurn);
@@ -48,9 +40,15 @@ export class QueueComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       this.socket.queuedForGame.subscribe((roomId: string) => {
-        console.log(roomId);
-
         this.gameRoomId = roomId;
+      })
+    );
+    this.subscriptions.push(
+      this.route.params.subscribe((params) => {
+        this.gameId = params['id'];
+
+        // TODO API call to load the details here.
+        this.gameService.queue(this.gameId);
       })
     );
   }

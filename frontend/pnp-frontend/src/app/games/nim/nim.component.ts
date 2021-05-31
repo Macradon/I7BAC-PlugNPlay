@@ -16,6 +16,7 @@ export class NimComponent implements OnInit, OnDestroy {
   public playerTurn: number;
   public tokenPool: number;
   public curPlayer = 0;
+  public gameReady = false;
 
   constructor(
     private signalRService: SignalRService,
@@ -40,10 +41,13 @@ export class NimComponent implements OnInit, OnDestroy {
           }
         })
     );
+    this.subscriptions.push(
+      this.signalRService.gameStart.subscribe(() => (this.gameReady = true))
+    );
     this.gameService.gameInitialized();
   }
   gameOver() {
-    throw new Error('Method not implemented.');
+    this.gameService.gameOver();
   }
 
   ngOnDestroy(): void {
@@ -52,7 +56,7 @@ export class NimComponent implements OnInit, OnDestroy {
   }
 
   sendMove(amount: number) {
-    if (this.curPlayer == this.playerTurn) {
+    if (this.curPlayer == this.playerTurn && this.gameReady) {
       const move: NimMove = { player: this.playerTurn, amountTaken: amount };
       this.gameService.sendMove(move);
     }
