@@ -89,8 +89,8 @@ namespace PlugNPlayBackend.UnitTest
             var actionResult = await systemUnderTest.PostLogin(nonExistingUser);
 
             // Assert
-            var result = Assert.IsType<ConflictObjectResult>(actionResult);
-            Assert.Equal("Wrong credentials", result.Value);
+            var result = Assert.IsType<NotFoundObjectResult>(actionResult);
+            Assert.Equal("User not found", result.Value);
         }
 
         [Fact]

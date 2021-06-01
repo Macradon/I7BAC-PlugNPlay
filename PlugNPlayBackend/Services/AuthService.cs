@@ -54,8 +54,13 @@ namespace PlugNPlayBackend.Services
                 {
                     return GenerateToken(username);
                 }
+                var nullPassword = new Token("");
+                nullPassword.JsonWebToken = "noPassword";
+                return nullPassword;
             }
-            return null;
+            var nullUser = new Token("");
+            nullUser.JsonWebToken = "noUser";
+            return nullUser;
         }
 
         //Method to register

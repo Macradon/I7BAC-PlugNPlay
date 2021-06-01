@@ -34,10 +34,15 @@ namespace PlugNPlayBackend.Controllers
         {
             var response = await _authService.Login(userObj.Username, userObj.Password);
 
-            if (response == null)
-                return Conflict("Wrong credentials");
-
-            return Ok(response);
+            switch(response.JsonWebToken)
+            {
+                case "noUser":
+                    return NotFound("User not found");
+                case "noPassword":
+                    return Conflict("Wrong credentials");
+                default:
+                    return Ok(response);
+            }
         }
 
         [HttpPost("password")]
