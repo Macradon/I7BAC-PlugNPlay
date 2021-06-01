@@ -17,7 +17,7 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult> GetProfile(User userObj)
+        public async Task<ActionResult> GetGameStats(User userObj)
         {
             var user = await _userService.Get(userObj.Username);
             if (user != null)
