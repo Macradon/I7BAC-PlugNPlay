@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services.Interfaces;
@@ -21,25 +17,21 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult> GetFriendlist(UserPair getPair)
+        public async Task<ActionResult> GetFriendlist(User userObj)
         {
-            var friendList = await _friendlistService.GetFriendlist(getPair.Username);
+            var friendList = await _friendlistService.GetFriendlist(userObj.Username);
             if (friendList != null)
             {
                 return Ok(friendList);
             }
-            return Conflict("Could not fetch friendlist from " + getPair.Username);
+            return Conflict("Could not fetch friendlist from " + userObj.Username);
         }
 
-        [HttpPost("add")]
-        public async Task<ActionResult> AddFriend(UserPair addPair)
+        [HttpPost("request")]
+        public async Task<ActionResult> SendRequest(UserPair requestPair)
         {
-            var friendlist = await _friendlistService.AddFriend(addPair.Username, addPair.FriendUsername);
-            if (friendlist != null)
-            {
-                return Ok(friendlist);
-            }
-            return Conflict("Could not add " + addPair.FriendUsername + "to friendlist");
+            await _friendlistService.SendRequest(requestPair.Username, requestPair.FriendUsername);
+            return Ok();
         }
 
         [HttpPost("Remove")]

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlugNPlayBackend.Models;
@@ -32,9 +31,9 @@ namespace PlugNPlayBackend.Services
         public async Task<User> Create(User userObj)
         {
             List<string> emptyList = new List<string>();
-            userObj.Friendlist = emptyList;
-            userObj.GameStats = emptyList;
             userObj.FriendRequests = emptyList;
+            userObj.Friendlist = emptyList;
+            userObj.GameStats = new List<GameStat>();
             _users.InsertOne(userObj);
             return userObj;
         }

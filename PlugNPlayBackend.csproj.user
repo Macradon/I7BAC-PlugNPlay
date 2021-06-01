@@ -5,6 +5,5 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>PlugNPlayBackend</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>PlugNPlayBackend - Web Deploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj": {}
+    "D:\\Git\\backendMaster\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj": {}
   },
   "projects": {
-    "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj": {
+    "D:\\Git\\backendMaster\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj",
+        "projectUniqueName": "D:\\Git\\backendMaster\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj",
         "projectName": "PlugNPlayBackend",
-        "projectPath": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj",
-        "packagesPath": "C:\\Users\\TriNguyen\\.nuget\\packages\\",
-        "outputPath": "D:\\Programs\\Github\\Macradon\\I7BAC-PlugNPlay\\obj\\",
+        "projectPath": "D:\\Git\\backendMaster\\I7BAC-PlugNPlay\\PlugNPlayBackend.csproj",
+        "packagesPath": "C:\\Users\\tri0c\\.nuget\\packages\\",
+        "outputPath": "D:\\Git\\backendMaster\\I7BAC-PlugNPlay\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\TriNguyen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tri0c\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -104,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -147,11 +147,6 @@ namespace PlugNPlayBackend.Hubs
                 await NotifyPlayers(queueList, "request", queueName);
             }
         }
-
-        public async Task NotifyRequest(string connectionID)
-        {
-            await Clients.Client(connectionID).SendAsync("FriendRequestReceived", Context.ConnectionId);
-        }
         #endregion      
 
         #region Friendlist
@@ -199,6 +194,11 @@ namespace PlugNPlayBackend.Hubs
                     }
                 }
             }
+        }
+
+        public async Task NotifyRequest(string recipientConnectionID)
+        {
+            await Clients.Client(recipientConnectionID).SendAsync("FriendRequestReceived");
         }
         #endregion
 
