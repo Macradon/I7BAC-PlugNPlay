@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
-using PlugNPlayBackend.Services;
 using PlugNPlayBackend.Services.Interfaces;
-using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
 namespace PlugNPlayBackend.Controllers
@@ -38,18 +32,23 @@ namespace PlugNPlayBackend.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> PostLogin(User userObj)
         {
-            var response = _authService.Login(userObj.Username, userObj.Password);
+            var response = await _authService.Login(userObj.Username, userObj.Password);
 
-            if (response == null)
-                return Conflict("Wrong credentials");
-
-            return Ok("Logged In: " + response);
+            switch(response.JsonWebToken)
+            {
+                case "noUser":
+                    return NotFound("User not found");
+                case "noPassword":
+                    return Conflict("Wrong credentials");
+                default:
+                    return Ok(response);
+            }
         }
 
         [HttpPost("password")]
         public async Task<ActionResult> ChangePassword(User userObj)
         {
-            var response = _authService.PasswordUpdate(userObj.Username, userObj.Password);
+            var response = await _authService.PasswordUpdate(userObj.Username, userObj.Password);
 
             if (response == null)
                 return Conflict("Something went wrong");

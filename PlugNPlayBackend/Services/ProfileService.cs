@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PlugNPlayBackend.Services.Interfaces;
 using PlugNPlayBackend.Models;
-using PlugNPlayBackend.Services;
 
 namespace PlugNPlayBackend.Services
 {

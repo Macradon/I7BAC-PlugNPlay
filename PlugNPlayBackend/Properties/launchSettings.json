@@ -14,18 +14,12 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
-        "VaultUri": "https://plugnplaybackendvault.vault.azure.net/",
-        "AZURE_USERNAME": "au564065@uni.au.dk",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "PlugNPlayBackend": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -34,11 +28,7 @@
     },
     "Frontend noobs": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
-        "VaultUri": "https://plugnplaybackendvault.vault.azure.net/",
-        "AZURE_USERNAME": "au309804@uni.au.dk",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"

@@ -42,9 +42,5 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="2.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="web.config" CopyToPublishDirectory="Always" />
-  </ItemGroup>
-
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/global.json" /></VisualStudio></ProjectExtensions>
 </Project>
