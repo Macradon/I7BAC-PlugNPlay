@@ -184,7 +184,7 @@ namespace PlugNPlayBackend.Hubs
 
                 if (requestingUser.ConnectionID != null)
                 {
-                    await Clients.Client(requestingUser.ConnectionID).SendAsync("FriendRequestAccepted");
+                    await Clients.Client(requestingUser.ConnectionID).SendAsync("FriendRequestAccepted", recipientUser.Username);
                 }
             }
         }
