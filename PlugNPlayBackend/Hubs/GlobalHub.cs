@@ -157,7 +157,11 @@ namespace PlugNPlayBackend.Hubs
             if (requestingUser != null && recipientUser != null)
             {
                 await _friendlistService.SendFriendRequest(recipientUser.Username, requestingUser.Username);
-                await NotifyRequest(recipientUser.ConnectionID, requestingUser.Username);
+                
+                if(recipientUser.ConnectionID != null)
+                {
+                    await NotifyRequest(recipientUser.ConnectionID, requestingUser.Username);
+                }
             }
         }
 
@@ -173,6 +177,7 @@ namespace PlugNPlayBackend.Hubs
             if (requestingUser != null && recipientUser != null)
             {
                 recipientUser.Friendlist.Add(requestingtUsername);
+                recipientUser.FriendRequests.Remove(requestingtUsername);
                 _userService.Update(recipientUser.Username, recipientUser);
                 requestingUser.Friendlist.Add(recipientUser.Username);
                 _userService.Update(requestingtUsername, requestingUser);

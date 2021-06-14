@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Services.Interfaces;
+using PlugNPlayBackend.Models;
 
 namespace PlugNPlayBackend.Controllers
 {
@@ -27,9 +28,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpPost("Remove")]
-        public async Task<ActionResult> RemoveFriend(string username, string friendUsername)
+        public async Task<ActionResult> RemoveFriend(UserPair users)
         {
-            var friendlist = await _friendlistService.RemoveFriend(username, friendUsername);
+            var friendlist = await _friendlistService.RemoveFriend(users.Username, users.FriendUsername);
             if (friendlist != null)
             {
                 return Ok(friendlist);
