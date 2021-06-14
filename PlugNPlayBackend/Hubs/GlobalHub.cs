@@ -150,6 +150,47 @@ namespace PlugNPlayBackend.Hubs
         #endregion      
 
         #region Friendlist
+        public async Task SendFriendRequest(string recipientUsername)
+        {
+            var requestingUser = await _userService.GetByConnection(Context.ConnectionId);
+            var recipientUser = await _userService.Get(recipientUsername);
+            if (requestingUser != null && recipientUser != null)
+            {
+                await _friendlistService.SendFriendRequest(recipientUser.Username, requestingUser.Username);
+                await NotifyRequest(recipientUser.ConnectionID, requestingUser.Username);
+            }
+        }
+
+        public async Task NotifyRequest(string recipientConnectionID, string requestingUsername)
+        {
+            await Clients.Client(recipientConnectionID).SendAsync("FriendRequest", requestingUsername);
+        }
+
+        public async Task AcceptFriendRequest(string requestingtUsername)
+        {
+            var requestingUser = await _userService.Get(requestingtUsername);
+            var recipientUser = await _userService.GetByConnection(Context.ConnectionId);
+            if (requestingUser != null && recipientUser != null)
+            {
+                recipientUser.Friendlist.Add(requestingtUsername);
+                _userService.Update(recipientUser.Username, recipientUser);
+                requestingUser.Friendlist.Add(recipientUser.Username);
+                _userService.Update(requestingtUsername, requestingUser);
+
+                if (requestingUser.ConnectionID != null)
+                {
+                    await Clients.Client(requestingUser.ConnectionID).SendAsync("FriendRequestAccepted");
+                }
+            }
+        }
+
+        public async Task DeclineFriendRequest(string requestingUsername)
+        {
+            var recipientUser = await _userService.Get(Context.ConnectionId);
+            recipientUser.FriendRequests.Remove(requestingUsername);
+            _userService.Update(recipientUser.Username, recipientUser);
+        }
+
         public async Task NotifyOnLogin(string username)
         {
             var userObj = await _userService.Get(username);
@@ -157,9 +198,8 @@ namespace PlugNPlayBackend.Hubs
             {
                 userObj.ConnectionID = Context.ConnectionId;
                 _userService.Update(userObj.Username, userObj);
-                var fullFriendlist = userObj.Friendlist;
 
-                foreach (string onlineUser in fullFriendlist)
+                foreach (string onlineUser in userObj.Friendlist)
                 {
                     var onlineFriend = await _userService.Get(onlineUser);
                     if (onlineFriend != null)
@@ -194,11 +234,6 @@ namespace PlugNPlayBackend.Hubs
                     }
                 }
             }
-        }
-
-        public async Task NotifyRequest(string recipientConnectionID)
-        {
-            await Clients.Client(recipientConnectionID).SendAsync("FriendRequestReceived");
         }
         #endregion
 

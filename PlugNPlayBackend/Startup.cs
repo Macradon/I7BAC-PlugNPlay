@@ -31,11 +31,12 @@ namespace PlugNPlayBackend
                 options.AddPolicy("PolicyCORS",
                                   builder =>
                                   {
-                                        builder.WithOrigins("https://localhost:4200",
-                                        "http://localhost:4200")
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod()
-                                        .AllowCredentials();
+                                      /*builder.WithOrigins("https://localhost:4200",
+                                                          "http://localhost:4200")
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod()
+                                                          .AllowCredentials();*/
+                                      builder.AllowAnyOrigin();
                                   });
 
             });

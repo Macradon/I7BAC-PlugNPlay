@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Hubs;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using PlugNPlayBackend.Services.Interfaces;
@@ -12,11 +13,9 @@ namespace PlugNPlayBackend.Services
     public class AuthService : IAuthService
     {
         //Variables
-            //private readonly IMongoCollection<User> _user;
         private readonly IFriendlistService _friendlistService;
         private readonly IUserService _userService;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
-        private IHubContext<GlobalHub> _hub;
 
         //Constructor
         public AuthService(IPlugNPlayDatabaseSettings settings, IConfiguration config, IFriendlistService friendlistService, IUserService userService, IHubContext<GlobalHub> hub)
@@ -28,7 +27,6 @@ namespace PlugNPlayBackend.Services
             //Injecct other class dependencies
             _friendlistService = friendlistService;
             _userService = userService;
-            _hub = hub;
         }
 
         //Method to update password
@@ -86,6 +84,7 @@ namespace PlugNPlayBackend.Services
         public async Task<bool> CheckUserExistance(string username)
         {
             var user = await _userService.Get(username);
+            Debug.WriteLine(username);
             if (user != null)
                 return true;
             return false;

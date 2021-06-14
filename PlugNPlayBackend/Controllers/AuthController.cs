@@ -34,7 +34,7 @@ namespace PlugNPlayBackend.Controllers
         {
             var response = await _authService.Login(userObj.Username, userObj.Password);
 
-            switch(response.JsonWebToken)
+            switch (response.JsonWebToken)
             {
                 case "noUser":
                     return NotFound("User not found");

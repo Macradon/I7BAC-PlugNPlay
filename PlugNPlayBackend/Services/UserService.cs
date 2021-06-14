@@ -31,9 +31,8 @@ namespace PlugNPlayBackend.Services
         public async Task<User> Create(User userObj)
         {
             List<string> emptyList = new List<string>();
-            userObj.FriendRequests = emptyList;
             userObj.Friendlist = emptyList;
-            userObj.GameStats = new List<GameStat>();
+            userObj.GameStats = emptyList;
             _users.InsertOne(userObj);
             return userObj;
         }

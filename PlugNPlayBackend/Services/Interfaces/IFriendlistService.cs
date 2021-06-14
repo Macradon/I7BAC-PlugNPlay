@@ -8,9 +8,8 @@ namespace PlugNPlayBackend.Services.Interfaces
     {
         public Task<FriendList> GetFriendlist(string username);
         public Task<List<string>> AddFriend(string username, string friendUsername);
+        public Task SendFriendRequest(string recipientUsername, string requestingUsername);
+        public Task RemoveFriendRequest(string recipientUsername, string requestingUsername);
         public Task<List<string>> RemoveFriend(string username, string friendUsername);
-        public Task SendRequest(string requestingUsername, string recipientUsername);
-        public Task AcceptRequest(string requestingUsername, string recipientUsername);
-        public Task DeclineRequest(string requestingUsername, string recipientUsername);
     }
 }
