@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PlugNPlayBackend.Models;
 using PlugNPlayBackend.Services.Interfaces;
@@ -21,9 +17,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult<User>> Get(string username)
+        public async Task<ActionResult<User>> Get(User userObj)
         {
-            var user = await _userService.Get(username);
+            var user = await _userService.Get(userObj.Username);
 
             if ( user == null)
                 return NotFound();
@@ -44,9 +40,9 @@ namespace PlugNPlayBackend.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<User>> Delete(string username)
+        public async Task<ActionResult<User>> Delete(User userObj)
         {
-            var user = await _userService.Get(username);
+            var user = await _userService.Get(userObj.Username);
             if ( user == null )
                 return NotFound();
 

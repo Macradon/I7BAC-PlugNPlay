@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using PlugNPlayBackend.Models;
-using PlugNPlayBackend.Services;
-using PlugNPlayBackend.Hubs;
-using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
 using PlugNPlayBackend.Services.Interfaces;
 
 namespace PlugNPlayBackend.Services
@@ -27,21 +18,22 @@ namespace PlugNPlayBackend.Services
 
         //This sections implements CRUD operations for the service 
         #region CRUD operations
-        public async Task<List<List<string>>> GetFriendlist(string username)
+        public async Task<FriendList> GetFriendlist(string username)
         {
             var userObj = await _userService.Get(username);
-            List<List<string>> friendList = new List<List<string>>();
             if (userObj != null)
             {
+                var friendList = new FriendList(userObj.FriendRequests);
                 foreach (string friend in userObj.Friendlist)
                 {
                     var friendObj = await _userService.Get(friend);
-                    if (friendObj.ConnectionID!=null)
+                    if (friendObj.ConnectionID != null)
                     {
-                        friendList[0].Add(friend);
-                    } else
+                        friendList.OnlineFriends.Add(friend);
+                    }
+                    else
                     {
-                        friendList[1].Add(friend);
+                        friendList.OfflineFriends.Add(friend);
                     }
                 }
                 return friendList;
@@ -64,16 +56,6 @@ namespace PlugNPlayBackend.Services
             return null;
         }
 
-        public async Task<List<string>> GetOnlineFriends(string username)
-        {
-            var userObj = await _userService.Get(username);
-            if (userObj != null)
-            {
-                return userObj.Friendlist;
-            }
-            return null;
-        }
-
         public async Task<List<string>> RemoveFriend(string username, string friendUsername)
         {
             var userObj = await _userService.Get(username);
@@ -87,6 +69,27 @@ namespace PlugNPlayBackend.Services
                 return userObj.Friendlist;
             }
             return null;
+        }
+
+        public async Task SendRequest(string requestingUsername, string recipientUsername)
+        {
+            var recipient = await _userService.Get(recipientUsername);
+            if (recipient != null)
+            {
+                recipient.FriendRequests.Add(requestingUsername);
+                _userService.Update(recipient.Username, recipient);
+            }
+        }
+
+        public async Task AcceptRequest(string requestingUsername, string recipientUsername)
+        {
+            var requesting = await _userService.Get(requestingUsername);
+            var recipient = await _userService.Get(recipientUsername);
+        }
+
+        public async Task DeclineRequest(string requestingUsername, string recipientUsername)
+        {
+
         }
         #endregion
     }
