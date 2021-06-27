@@ -56,7 +56,6 @@ export class RegisterComponent {
           this.redirectLogin();
         },
         (err: HttpErrorResponse) => {
-          console.log('This even called?');
           if (err.status === 200) {
             this.redirectLogin();
           } else if (err.status === 409) {
